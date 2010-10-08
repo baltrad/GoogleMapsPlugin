@@ -1,0 +1,187 @@
+/* Set default margin, padding */
+* {
+	margin: 0;
+	padding: 0;
+	font-family: Sans-Serif;
+	font-size: 11px;
+}
+#map, html, body, #loaded {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	background-color: #000000;
+	font-family: sans-serif;
+	font-size: 12px;
+}
+img {
+	border: 0px;
+	vertical-align: middle
+	image-rendering: -moz-crisp-edges; /* Firefox 3.6 */
+	-ms-interpolation-mode: nearest-neighbor; /* Internet Explorer 7.0+ */
+}
+A {
+	text-decoration: none;
+	vertical-align: baseline;
+	font-weight: bold;
+}
+A:link {
+	color: #660000;
+}
+A:active {
+	color: #660000;
+}
+A:visited {
+	color: #660000;
+}
+A:hover {
+	text-decoration: underline;
+	color: #FF0000;
+}
+input {
+	margin: 2px;
+	padding: 1px;
+	border: 1px solid black;
+	font-family: Sans-Serif;
+	font-size: 11px;
+}
+#loaded {
+	visibility: hidden;
+}
+#loading {
+	background-color: #FDFDFD;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+}
+#loading .centered {
+	padding-top: 50px;
+	font-family: Sans-serif;
+	font-size: 16px;
+	font-style: italic;
+	font-weight: bold;
+}
+#div_about {
+	padding: 2px 5px 2px 5px;
+	border: solid #000000 1px;
+	color: #000000;
+	background-color: #ffffff;
+	position: absolute;
+	/*height: 34px;*/
+	height: 50px;
+	bottom: 17px;
+	right: 125px;
+	z-index: 2;
+	overflow: hidden;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	opacity: 0.90;
+	filter: alpha(opacity=90);
+	-moz-opacity: 0.90;
+	-khtml-opacity: 0.90;
+	clear: both;
+	float: left;
+}
+/* --------------------------------------------------------------------------------------------- */
+/* Absolute positioned DIV with title and image dates*/
+#div_title {
+	padding: 2px 3px 2px 3px;
+	border: solid #000000 1px;
+	color: #000000;
+	background-color: #ffffff;
+	position: absolute;
+	width: 180px;
+	height: 85px;
+	left: 80px;
+	top: 5px;
+	overflow: hidden;
+	z-index: 10;
+	text-align: center;
+	font-size: 11px;
+	opacity: 0.90;
+	filter: alpha(opacity=90);
+	-moz-opacity: 0.90;
+	-khtml-opacity: 0.90;
+	clear: both;
+	float: left;
+}
+#span_title_name {
+	font-size: 12px;
+	font-weight: bold;
+}
+#span_title_time_utc {
+	font-size: 12px;
+	font-weight: bold;
+}
+#span_title_time_local {
+	font-size: 12px;
+}
+#div_title_copy {
+	padding-top: 5px;
+}
+#div_scl {
+	position: absolute;
+	top: 210px;
+	left: 10px;
+	z-index: 2;
+}
+/* --------------------------------------------------------------------------------------------- */
+/* Absolute position of white container for control elements*/
+#div_controls {
+	padding: 5px 0px 5px 0px;
+	border: solid #000000 1px;
+	background-color: #ffffff;
+	position: absolute;
+	top: 45px;
+	right: 10px;
+	z-index: 1;
+	width: 175px;
+	text-align: center;
+	font-size: 11px;
+	font-weight: bold;
+	opacity: 0.90;
+	filter: alpha(opacity=90);
+	-moz-opacity: 0.90;
+	-khtml-opacity: 0.90;
+	clear: both;
+	float: left;
+}
+
+#div_setdatadate {
+	font-size: 10px;
+}
+
+#div_setprd {
+	font-size: 10px;
+}
+
+#div_update_info {
+	font-size: 10px;
+	font-style: italic;
+}
+#div_update {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+/* List of files */
+#radar_img_list {
+	border: 1px solid black;
+}
+/* Control panel */
+#div_control_panel {
+	font-size: 11px;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+/* --------------------------------------------------------------------------------------------- */
+/* Radar image */
+#radar-img {
+	image-rendering: -moz-crisp-edges;
+/* Firefox 3.6 */
+	-ms-interpolation-mode: nearest-neighbor;
+/* Internet Explorer 7.0+ */
+}
+  

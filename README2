@@ -1,0 +1,17 @@
+This is a modified version of the Google Maps weather radar viewer
+created by Petr Novak, CHMI (http://www.chmi.cz, petr_novak@chmi.cz)
+and Lukas Ronge, A.S.S.  (http://www.bourky.com, ronge.lukas@gmail.com
+for use by EUMETNET-OPERA community.
+
+This version was made by Thomas Boevith (thb@dmi.dk), Danish
+Meteorological Institute (DMI) to display data from the BALTRAD
+community. Extensions to the original version are: multiple products
+support, selection of date, and on/off button.
+
+Included in this version is demo data from DMI as well as the Swedish
+Meteorological and Hydrological Institute (SHMI).
+
+Please substitue the apikey with your own key in line 22 of index.php
+and see the README file for further information.
+
+2010-08-25

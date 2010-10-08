@@ -1,0 +1,68 @@
+This directory and subdirectories contain prototype of web-based radar data 
+viewer that uses GoogleMaps API. It was created by Petr Novak, CHMI 
+(http://www.chmi.cz, petr_novak@chmi.cz) and Lukas Ronge, A.S.S. 
+(http://www.bourky.com, ronge.lukas@gmail.com for use by EUMETNET-OPERA community.
+
+-------------------------------------------------------------------------------
+ 
+There are two examples:
+1.) index.php - viewer of European OPERA composite - it reads data 
+from data directory using list_data.php   
+
+2.) index.cz.php - viewer of CZRAD composite - it reads data 
+from data.cz directory using list_data.cz.php
+
+-------------------------------------------------------------------------------
+
+To create viewer of your own data you should do following steps:
+
+1.) Prepare your data in standard image format (preferably PNG) in GoogleMaps 
+projection. Proj4 definition of GoogleMap projection is (example for 
+European OPERA composite):
+
+<eua_gmaps> proj=merc lat_ts=0 lon_0=0 k=1.0 x_0=1335833 y_0=-11000715 a=6378137.0 b=6378137.0 no_defs <>
+
+You also need to know:
+x_res = 800   //number of columns
+y_res = 1090  //number of rows
+pix_res = 6223 //pixel size [in meters] in center of the projection [lat=0, lon=0] 
+
+Pix_res size should be calculated as 1/cos(pix_size_in_lat_orig), where 
+pix_size_in_lat_orig is size of pixel in center of original projection or in 
+your preferable point. 6223 for OPERA composite was calculated as 
+4000[m]*cos(50[deg]), when we wanted to have original 4km resolution on 50deg 
+latitude.  
+
+2.) Calculate North-West and South-West coordinates (outer corner of pixel) 
+of your radar images. For OPERA composite you can get it as   
+for NE:
+echo  799.5 0.5|invproj +init=./proj_list.txt:eua_gmaps -f %.3f -s -m 1:6223   
+for SW:
+echo  -0.5 -1089.5|invproj +init=./proj_list.txt:eua_gmaps -f %.3f -s -m 1:6223   
+
+3.) modify list_data.php to point to correct data directory and to read 
+correctly dates from filenames of your radar data. Output of this file should be
+in following format:
+
+<select id="radar_img_list" multiple="multiple" size="10">
+<option selected='selected' value='200906191800;./data/eua_gmaps.bufr30.20090619.1800.0.png'>19.06.2009  18:00 UTC</option>
+<option selected='selected' value='200906191745;./data/eua_gmaps.bufr30.20090619.1745.0.png'>19.06.2009  17:45 UTC</option>
+...
+<option value='200906191130;./data/eua_gmaps.bufr30.20090619.1130.0.png'>19.06.2009  11:30 UTC</option>
+<option value='200906191115;./data/eua_gmaps.bufr30.20090619.1115.0.png'>19.06.2009  11:15 UTC</option>
+</select>
+
+4.) Modify Javascript parameters in index.php (lines 26 - 77) according your settings 
+
+5.) In this state, it should be working on webserver with PHP support and
+available from localhost. To be available from everywhere need to create 
+your own GoogleMaps key on  
+
+http://code.google.com/apis/maps/signup.html 
+
+and replace with it CHMI key in index.php (lines 19 and 21.)
+
+6.) That should be all. We will appreciate if you will let us know 
+about your use of this viewer.
+
+          Petr Novak, Lukas Ronge
