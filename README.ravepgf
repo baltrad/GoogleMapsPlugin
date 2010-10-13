@@ -1,0 +1,3 @@
+
+./pgf_registry -a -H http://localhost:8085/RAVE -n se.smhi.rave.creategmapimage -m googlemap_pgf_plugin -f generate -s outname
+

@@ -19,9 +19,7 @@ along with GoogleMapsPlugin.  If not, see <http://www.gnu.org/licenses/>.
 
 This class contains the nessecary functions for generating a google
 map compatible png-image. Basically it fetches an array from a ODIM
-formatted HDF5 file, applies a color legend and writes a .png file.
-This is yet a modified version of the original software created by
-the people mentioned in README and README2.
+formatted HDF5 file, applies a color palette and writes a .png file.
 
 @file
 @author Anders Henja (Swedish Meteorological and Hydrological Institute, SMHI)
@@ -29,33 +27,62 @@ the people mentioned in README and README2.
 '''
 import _pyhl
 import Image
-import GmapLegend
+import GmapColors
 
 class GmapCreator(object):
+  _colors = None
+  _gmappalette = None
   _nodelist = None
-  _palette = None
+  _node = None
+  _gain = None
+  _intercept = None
+  _quantity = None
   
-  def __init__(self, h5file):
+  def __init__(self, h5file, dataset="/dataset1/data1/data", whatgroup="/dataset1/what", **kw):
+    self._colors = GmapColors.GmapColors()
     self._nodelist = _pyhl.read_nodelist(h5file)
+    self._node = self._nodelist.fetchNode(dataset)
     
-  def set_palette(self, palette):
-    self._palette = palette
-  
-  def get_image(self, dataset):
-    node = self._nodelist.fetchNode(dataset)
-    img = Image.fromarray(node.data(), "L")
+    if not kw.has_key("gain"):
+      self._gain = self._nodelist.fetchNode(whatgroup + "/gain").data()
+      if self._gain == 0.0:
+        raise ValueError('gain == 0.0')
+    else:
+      self._gain = kw["gain"]
+      
+    if not kw.has_key("intercept"):
+      self._intercept = self._nodelist.fetchNode(whatgroup + "/offset").data()
+    else:
+      self._intercept = kw["intercept"]
+      
+    if not kw.has_key("quantity"):
+      self._quantity = self._nodelist.fetchNode(whatgroup + "/quantity").data()
+    else:
+      self._quantity = kw["quantity"]
+
+    self._gmappalette = self._colors.palette(self._quantity, self._intercept, self._gain)
+
+  def _create_image(self):
+    img = Image.fromarray(self._node.data(), "L")
     return img
+
+  def quantity(self):
+    return self._quantity
   
-  def create_image(self, node="/dataset1/data1/data"):
-    img = self.get_image(node)
-    if self._palette != None:
-      img.putpalette(self._palette)
+  def gmappalette(self):
+    return self._gmappalette
+  
+  def create_image(self):
+    img = self._create_image()
+    
+    img.putpalette(self._gmappalette.palette())
+    
     return img
   
 if __name__ == "__main__":
+  #creator = GmapCreator("../testdata/swecomposite_gmap.h5",gain=0.5,intercept=-32.0)
   creator = GmapCreator("../testdata/swecomposite_gmap.h5")
-  creator.set_palette(GmapLegend.REFLECTIVITY.palette())
   img = creator.create_image()
   img.save("slask.png", transparency=0)
-  GmapLegend.REFLECTIVITY.legend(title="dBZ").save("legend.png")
+  creator.gmappalette().legend(title="dbz", legendheight=196).save("legend.png")
   
