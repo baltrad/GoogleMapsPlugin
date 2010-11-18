@@ -1,7 +1,27 @@
 '''
-Created on Oct 8, 2010
+Copyright (C) 2010 Swedish Meteorological and Hydrological Institute, SMHI,
 
-@author: anders
+This file is part of the google maps plugin for rave.
+
+GoogleMapsPlugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GoogleMapsPlugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with GoogleMapsPlugin.  If not, see <http://www.gnu.org/licenses/>.
+------------------------------------------------------------------------*/
+
+Color calculation
+
+@file
+@author Anders Henja (Swedish Meteorological and Hydrological Institute, SMHI)
+@date 2010-11-18
 '''
 import RadarColorMap
 from GmapPalette import GmapPalette
@@ -35,7 +55,6 @@ class GmapColors(object):
     cpalette = []
     intervalsPhysical = []
     intervalsDigitalNumbers = []
-    print "off=%f, slope=%f"%(intercept, slope)
     for i in range(len(keys)-1):
       lowKey = keys[i]
       highKey = keys[i+1]
@@ -86,7 +105,6 @@ class GmapColors(object):
           cpalette.extend( (r,g,b) )
           j+=1
     
-    print "LENGTH=%d"%len(cpalette)
     if len(cpalette) != TABLE_LENGTH*3:
       raise Exception('palette did not become %d in length'%(TABLE_LENGTH*3))
 

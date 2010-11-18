@@ -12,31 +12,11 @@
   $prd=$_GET["prd"];
   if ($prd == '') $prd="mosaic";
 
-  $org=$_GET["org"];
-  if ($org == '') $org="dmi";
-
-  //$data_dir='./data/';
-  //$data_dir='./data.dmi/mosaic/2010/08/02';
-   if ($org =="smhi" && $prd == "mosaic") {
-     $yyyy="2010";
-     $mm="07";
-     $dd="29";
-   } else if ($org =="baltrad" && $prd == "ekxv") {
-     $yyyy="2010";
-     $mm="08";
-     $dd="17";
-   } else {
-     //$yyyy="2010";
-     //$mm="07";
-     //$dd="29";
-     $yyyy=substr($datadate,0,4);
-     $mm=substr($datadate,4,2);
-     $dd=substr($datadate,6,2);
-   }
-
-  $data_dir='./data.'.$org.'/'.$prd.'/'.$yyyy.'/'.$mm.'/'.$dd;
-  //echo "<!-- data_dir='$data_dir' -->\n";
-  echo "<!-- org='$org' -->\n";
+  $yyyy=substr($datadate,0,4);
+  $mm=substr($datadate,4,2);
+  $dd=substr($datadate,6,2);
+       
+  $data_dir='./data/'.$prd.'/'.$yyyy.'/'.$mm.'/'.$dd;
   $ImgArr = Array();
 
   $ImgDir=opendir($data_dir);
@@ -44,16 +24,7 @@
     if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="index.php") {
       $parts=explode(".",$ImgFile);
       $min=substr($parts[0],$parts[0].length-1,1);
-      if ($org =="dmi" && $prd == "mosaic" && $parts[4]==2000) {
-        $ImgArr[count($ImgArr)] = $ImgFile;
-      } else if ($org =="smhi" && $prd == "mosaic") {
-        $ImgArr[count($ImgArr)] = $ImgFile;
-      } else if ($prd == "ekrn" || $prd == "eksn" || $prd == "ekxr" || $prd == "ekxs" || $prd == "ekxv") {
-        if ($parts[3]==500 && $min==0) {
-       	  $min=substr($parts[0],$parts[0].length-1,1);
-          $ImgArr[count($ImgArr)] = $ImgFile;
-        }
-      }
+      $ImgArr[count($ImgArr)] = $ImgFile;
     }
   }
 

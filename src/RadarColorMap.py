@@ -1,9 +1,28 @@
 '''
-Created on Oct 11, 2010
+Copyright (C) 2010 Swedish Meteorological and Hydrological Institute, SMHI,
 
-@author: anders
+This file is part of GoogleMapsPlugin.
+
+GoogleMapsPlugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GoogleMapsPlugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with GoogleMapsPlugin.  If not, see <http://www.gnu.org/licenses/>.
+------------------------------------------------------------------------*/
+
+Predefined color maps
+
+@file
+@author Anders Henja (Swedish Meteorological and Hydrological Institute, SMHI)
+@date 2010-10-07
 '''
-
 VALUE_TYPE_PHYSICAL = 0
 VALUE_TYPE_DIGITALNUMBER = 1
 
@@ -59,7 +78,6 @@ _HYDROMET = { -5: [255,255,255], # Lower bound
 
 COLORMAPS={}
 COLORMAPS["DBZH"] = RadarColorMap(VALUE_TYPE_PHYSICAL, COLOR_TYPE_CONTINOUOS, _REFLECTIVITY)
-#COLORMAPS["DBZH"] = RadarColorMap(VALUE_TYPE_DIGITALNUMBER, COLOR_TYPE_CONTINOUOS, _REFLECTIVITY)
 COLORMAPS["CLASS"] = RadarColorMap(VALUE_TYPE_DIGITALNUMBER, COLOR_TYPE_CONTINOUOS, _HYDROMET)
 
 

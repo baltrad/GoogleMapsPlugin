@@ -2,7 +2,6 @@
 // ----------------------------------------------
 function createXmlHttpRequestObject(){
   var xmlHttp;
-
   try{
     xmlHttp = new XMLHttpRequest();
   } catch(e) {
@@ -31,7 +30,7 @@ function request_radar_image_list()
   if (xmlHttp_list){
     try {
       var url=script_for_radar_image_list;
-      url=url+"?nselect="+nselect+"&nload"+nload+"&datadate="+datadate+"&prd="+prd+"&org="+org;
+      url=url+"?nselect="+nselect+"&nload"+nload+"&datadate="+datadate+"&prd="+prd;
       xmlHttp_list.open("GET", url, true);
       xmlHttp_list.onreadystatechange = handle_radar_image_list;
       xmlHttp_list.send(null);
@@ -83,18 +82,12 @@ function change_datadate() {
 }
 
 function change_colorbar() {
-  if (org == "baltrad") {
-    document.getElementById('div_scl').innerHTML="<img src=\"./img/legendhmc.png\">";
-  } else {
-    document.getElementById('div_scl').innerHTML="<img src=\"./img/scl.png\">";
-  }
+  document.getElementById('div_scl').innerHTML="<img src=\"./img/legendhmc.png\">";
 }
 
 function change_prd() {
   var tmp = window.document.getElementById('prd').value;
-  var parts = tmp.split('.'); 
-  prd = parts[0];
-  org = parts[1];
+  prd = tmp;
   change_center_boundary();
   request_radar_image_list();
   change_update_time();
@@ -106,63 +99,15 @@ function change_prd() {
 }
 
 function change_center_boundary() {
-  if (prd == "mosaic" && org == "dmi") {
-    lat = 56.0;
-    lon = 12.0;
-    zoom = 5;
-    nelat = 59.67167533;
-    nelon = 18.89157043;
-    swlat = 52.91342545;
-    swlon = 4.69818894;
-  } else if (prd == "mosaic" && org == "smhi") {
-    lat = 63.0;
-    lon = 18.0;
-    zoom = 4;
-    nelat = 69.876;
-    nelon = 27.0872;
-    swlat = 54.1387;
-    swlon = 8.72568;
-  } else if (prd == "ekrn" && org == "dmi") {
-    lon = 14.887517;
-    lat = 55.11275;
-    zoom = 6;
-    nelon = 18.63567618;
-    nelat = 57.20569;
-    swlon = 11.11935782;
-    swlat = 52.89581;
-  } else if (prd == "eksn" && org == "dmi") {
-    lon = 10.136472;
-    lat = 57.489306;
-    zoom = 6;
-    nelon = 14.12457614;
-    nelat = 59.582246;
-    swlon = 6.12836786;
-    swlat = 55.272366;
-  } else if (prd == "ekxr" && org == "dmi") {
-    lon = 8.552;
-    lat = 55.173111;
-    zoom = 6;
-    nelon = 12.30581854;
-    nelat = 57.266051;
-    swlon = 4.77818146;
-    swlat = 52.956171;
-  } else if (prd == "ekxs" && org == "dmi") {
-    lon = 12.449278;
-    lat = 55.326194;
-    zoom = 6;
-    nelon = 16.21754479;
-    nelat = 57.419134;
-    swlon = 8.66101121;
-    swlat = 53.109254;
-  } else if (prd == "ekxv" && org == "dmi" || org == "baltrad") {
-    lon = 10.0245906;
-    lat = 56.0240069;
-    zoom = 6;
-    nelon = 13.86049774;
-    nelat = 58.1169469;
-    swlon = 6.16868346;
-    swlat = 53.8070669;
-  }
+  alert("Fetching radar product for " + prd);
+  var p = radar_products[prd];
+  lat = p.lat;
+  lon = p.lon;
+  zoom = p.zoom;
+  nelat = p.nelat;
+  nelon = p.nelon;
+  swlat = p.swlat;
+  swlon = p.swlon;
   ne = new google.maps.LatLng(nelat,nelon);
   sw = new google.maps.LatLng(swlat,swlon);
   boundaries = new GLatLngBounds(sw, ne);  

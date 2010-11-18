@@ -27,37 +27,163 @@
 
     <script src="./js/gmap_overlay.js" type="text/javascript"></script>
 
+    <!-- This script needs to be generated prior usage -->
+    
+    <script src="./products.js" type="text/javascript"></script>
+
     <script type="text/javascript">
       // definition of the startup values (highest priority has webpage parametrs (GET method), 
       // then value stored in Cookies and then default value defined here      
             	    
       // repetition time = animation speed (index in the option list)
-	    <?php if(isset($_GET["rep"])){echo "var rep='".$_GET["rep"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["rep"])){echo "var rep='".$_COOKIE["radar_gmap"]["rep"]."';\n";}else{echo "var rep='1';\n";}}?>
+	  <?php 
+	    if(isset($_GET["rep"])){
+	      echo "var rep='".$_GET["rep"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["rep"])) {
+	        echo "var rep='".$_COOKIE["radar_gmap"]["rep"]."';\n";
+	      } else {
+	        echo "var rep='1';\n";
+	      }
+	    }
+	  ?>
+	    
       // additional waiting time for last image in the animation (index in the option list)
-	    <?php if(isset($_GET["add"])){echo "var add='".$_GET["add"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["add"])){echo "var add='".$_COOKIE["radar_gmap"]["add"]."';\n";}else{echo "var add='4';\n";}}?>
+	  <?php 
+	    if(isset($_GET["add"])){
+	      echo "var add='".$_GET["add"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["add"])){
+	        echo "var add='".$_COOKIE["radar_gmap"]["add"]."';\n";
+	      } else {
+	        echo "var add='4';\n";
+	      }
+	    }
+	  ?>
+	    
       // latitude of the center of the map
-	    <?php if(isset($_GET["lat"])){echo "var lat='".$_GET["lat"]."';\n";}else{if($_COOKIE["radar_gmap"]["lat"]){echo "var lat='".$_COOKIE["radar_gmap"]["lat"]."';\n";}else{echo "var lat='56.0';\n";}}?>
+	  <?php 
+	    if(isset($_GET["lat"])){
+	      echo "var lat='".$_GET["lat"]."';\n";
+	    } else {
+	      if($_COOKIE["radar_gmap"]["lat"]){
+	        echo "var lat='".$_COOKIE["radar_gmap"]["lat"]."';\n";
+	      } else {
+	        //echo "var lat='56.0';\n";
+	        echo "var lat=radar_products[radar_option_list[0]].lat;\n";
+	      }
+	    }
+	  ?>
+	    
       // longitude of the center of the map
-	    <?php if(isset($_GET["lon"])){echo "var lon='".$_GET["lon"]."';\n";}else{if($_COOKIE["radar_gmap"]["lon"]){echo "var lon='".$_COOKIE["radar_gmap"]["lon"]."';\n";}else{echo "var lon='12.0';\n";}}?>
+	  <?php
+	    if(isset($_GET["lon"])){
+	      echo "var lon='".$_GET["lon"]."';\n";
+	    } else {
+	      if($_COOKIE["radar_gmap"]["lon"]){
+	        echo "var lon='".$_COOKIE["radar_gmap"]["lon"]."';\n";
+	      } else {
+	        //echo "var lon='12.0';\n";
+	        echo "var lon=radar_products[radar_option_list[0]].lon;\n";
+	      }
+	    }
+	  ?>
+	    
       // zoom level
-	    <?php if(isset($_GET["zoom"])){echo "var zoom='".$_GET["zoom"]."';\n";}else{if($_COOKIE["radar_gmap"]["zoom"]){echo "var zoom='".$_COOKIE["radar_gmap"]["zoom"]."';\n";}else{echo "var zoom='6';\n";}}?>
+	  <?php 
+	    if(isset($_GET["zoom"])){
+	      echo "var zoom='".$_GET["zoom"]."';\n";
+	    } else {
+	      if($_COOKIE["radar_gmap"]["zoom"]){
+	        echo "var zoom='".$_COOKIE["radar_gmap"]["zoom"]."';\n";
+	      } else {
+	        //echo "var zoom='6';\n";
+	        echo "var zoom=radar_products[radar_option_list[0]].zoom;\n";
+	      }
+	    }
+	  ?>
+	    
       // radar image opacity (index in the option list)
-	    <?php if(isset($_GET["opa"])){echo "var opa='".$_GET["opa"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["opa"])){echo "var opa='".$_COOKIE["radar_gmap"]["opa"]."';\n";}else{echo "var opa='4';\n";}}?>
+	  <?php
+	    if(isset($_GET["opa"])){
+	      echo "var opa='".$_GET["opa"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["opa"])){
+	        echo "var opa='".$_COOKIE["radar_gmap"]["opa"]."';\n";
+	      } else {
+	        echo "var opa='4';\n";
+	      }
+	    }
+	  ?>
+
       // map type to be displayed
-	    <?php if(isset($_GET["maptype"])){echo "var maptype='".$_GET["maptype"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["maptype"])){echo "var maptype='".$_COOKIE["radar_gmap"]["maptype"]."';\n";}else{echo "var maptype=G_PHYSICAL_MAP;\n";}}?>
+	  <?php
+	    if(isset($_GET["maptype"])){
+	      echo "var maptype='".$_GET["maptype"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["maptype"])){
+	        echo "var maptype='".$_COOKIE["radar_gmap"]["maptype"]."';\n";
+	      } else {
+	        echo "var maptype=G_PHYSICAL_MAP;\n";
+	      }
+	    }
+	  ?>
+
       // update time of radar image list (index in the option list)
-	    <?php if(isset($_GET["update"])){echo "var update='".$_GET["update"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["update"])){echo "var update='".$_COOKIE["radar_gmap"]["update"]."';\n";}else{echo "var update='0';\n";}}?>
+	  <?php
+	    if(isset($_GET["update"])){
+	      echo "var update='".$_GET["update"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["update"])) {
+	        echo "var update='".$_COOKIE["radar_gmap"]["update"]."';\n";
+	      } else {
+	        echo "var update='0';\n";
+	      }
+	    }
+	  ?>
+
       // number of image to be selected in radar image list
-	    <?php if(isset($_GET["nselect"])){echo "var nselect='".$_GET["nselect"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["nselect"])){echo "var nselect='".$_COOKIE["radar_gmap"]["nselect"]."';\n";}else{echo "var nselect='24';\n";}}?>
+	  <?php
+	    if(isset($_GET["nselect"])){
+	      echo "var nselect='".$_GET["nselect"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["nselect"])){
+	        echo "var nselect='".$_COOKIE["radar_gmap"]["nselect"]."';\n";
+	      } else {
+	        echo "var nselect='24';\n";
+	      }
+	    }
+	  ?>
+
       // number of image to be loaded into the radar image list
-	    <?php if(isset($_GET["nload"])){echo "var nload='".$_GET["nload"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["nload"])){echo "var nload='".$_COOKIE["radar_gmap"]["nload"]."';\n";}else{echo "var nload='999';\n";}}?>
-      // Organization
-	    <?php if(isset($_GET["org"])){echo "var org='".$_GET["org"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["org"])){echo "var org='".$_COOKIE["radar_gmap"]["org"]."';\n";}else{echo "var org='dmi';\n";}}?>
+	  <?php
+	    if(isset($_GET["nload"])){
+	      echo "var nload='".$_GET["nload"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["nload"])){
+	        echo "var nload='".$_COOKIE["radar_gmap"]["nload"]."';\n";
+	      } else {
+	        echo "var nload='999';\n";
+	      }
+	    }
+	  ?>
+
       // Product
-	    <?php if(isset($_GET["prd"])){echo "var prd='".$_GET["prd"]."';\n";}else{if(isset($_COOKIE["radar_gmap"]["prd"])){echo "var prd='".$_COOKIE["radar_gmap"]["prd"]."';\n";}else{echo "var prd='mosaic';\n";}}?>
+	  <?php
+	    if(isset($_GET["prd"])){
+	      echo "var prd='".$_GET["prd"]."';\n";
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["prd"])){
+	        echo "var prd='".$_COOKIE["radar_gmap"]["prd"]."';\n";
+	      } else {
+	        echo "var prd=radar_option_list[0];\n";
+	      }
+	    }
+	  ?>
+
       // date of data
-	    <!-- <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='".date("Ymd")."';\n";}?> -->
-	    <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='20100729';\n";}?>
+	  <!-- <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='".date("Ymd")."';\n";}?> -->
+	  <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='20101026';\n";}?>
 
       //user-defined variables:
       
@@ -80,10 +206,10 @@
       // radar image boundaries - outer edges of corner pixels
       //var ne = new google.maps.LatLng(69.800,32.694);
       //var sw = new google.maps.LatLng(35.417,-12.028);
-      var nelat = 59.67167533;
-      var nelon = 18.89157043;
-      var swlat = 52.91342545;
-      var swlon = 4.69818894;
+      var nelat = radar_products[radar_option_list[0]].nelat;
+      var nelon = radar_products[radar_option_list[0]].nelon;
+      var swlat = radar_products[radar_option_list[0]].swlat;
+      var swlon = radar_products[radar_option_list[0]].swlon;
       var ne = new google.maps.LatLng(nelat,nelon);
       var sw = new google.maps.LatLng(swlat,swlon);
       var boundaries = new GLatLngBounds(sw, ne);  
@@ -100,8 +226,7 @@
       //if(navigator.userAgent.toLowerCase().indexOf("opers") != -1) {      
       if(navigator.userAgent.toLowerCase().indexOf("opera") != -1) {
         maxMapScale = 10;
-      }	
-
+      }
     </script>
 
     <script src="./js/init.js" type="text/javascript"></script>
@@ -156,6 +281,9 @@
 	<div id="div_setprd">
 	  <form name="prd">
 	    <select name="prd" id="prd" onsubmit="return false" onchange="return change_prd()">
+<!--
+          This list is generated dynamically from the radar option list	    
+	      <option value="swegmaps_2000">SMHI Composite</option>
 	      <option value='ekxv.baltrad'>BALTRAD HMC Virring</option>
 	      <option value='mosaic.smhi'>SMHI Composite</option>
 	      <option value='mosaic.dmi' selected>DMI Composite</option>
@@ -164,9 +292,24 @@
 	      <option value='ekxr.dmi'>DMI Romo</option>
 	      <option value='ekxs.dmi'>DMI Stevns</option>
 	      <option value='ekxv.dmi'>DMI Virring</option>
+-->	      
 	    </select>
+	    
 	  </div>
-
+	  
+      <script type="text/javascript">
+        // add options to product list dynamically
+        for (var i = 0; i < radar_option_list.length; i++) {
+          var key = radar_option_list[i];
+          var prod = radar_products[key];
+          var optn = document.createElement("OPTION");
+          optn.text = prod.description;
+          optn.value = key;
+          var s = document.getElementById('prd');
+          s.options[s.options.length] = optn;
+        }
+      </script>
+      
       <div id="div_update">
       Update image list
       <input type="button" value="now" onclick="update_radar_image_list()" />

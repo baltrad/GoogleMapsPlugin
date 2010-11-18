@@ -1,7 +1,27 @@
 '''
-Created on Oct 11, 2010
+Copyright (C) 2010 Swedish Meteorological and Hydrological Institute, SMHI,
 
-@author: anders
+This file is part of GoogleMapsPlugin.
+
+GoogleMapsPlugin is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GoogleMapsPlugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with GoogleMapsPlugin.  If not, see <http://www.gnu.org/licenses/>.
+------------------------------------------------------------------------*/
+
+Class for managing a palette
+
+@file
+@author Anders Henja (Swedish Meteorological and Hydrological Institute, SMHI)
+@date 2010-10-07
 '''
 import Image,ImageDraw, ImageFont
 import numpy
