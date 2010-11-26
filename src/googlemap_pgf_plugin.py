@@ -25,7 +25,7 @@ compatible png file.
 @date 2010-10-07
 '''
 import GmapCreator
-
+import os
 #
 # @param files - an array of files, only first file will be used
 # @param arguments array of two arguments, ["outfile", <name of file to be saved>]
@@ -40,6 +40,12 @@ def generate(files, arguments):
     if arguments[i] == "outfile":
       filename = arguments[i+1]
       break
+  
+  dname = os.path.dirname(filename)
+  if not os.path.exists(dname):
+    os.makedirs(dname)
+  elif os.path.exists(dname) and not os.path.isdir(dname):
+    raise Exception, "%s already exists but is not a directory"%dname
   
   img.save(filename, transparency=0)
   return None
