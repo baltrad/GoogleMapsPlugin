@@ -31,7 +31,6 @@ Usage:
   
   You will also need a php-capable www-server like apache
   that is configured to have a path to the web-catalog.
-  
 @file
 @author Anders Henja (Swedish Meteorological and Hydrological Institute, SMHI)
 @date 2010-11-30
