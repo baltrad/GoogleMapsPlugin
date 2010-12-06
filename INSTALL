@@ -1,0 +1,43 @@
+#
+#Copyright (C) 2010 Swedish Meteorological and Hydrological Institute, SMHI,
+#
+#This file is part of the google maps plugin for rave.
+#
+#GoogleMapsPlugin is free software: you can redistribute it and/or modify
+#it under the terms of the GNU Lesser General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#GoogleMapsPlugin is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU Lesser General Public License for more details.
+#
+#You should have received a copy of the GNU Lesser General Public License
+#along with GoogleMapsPlugin.  If not, see <http://www.gnu.org/licenses/>.
+##########################################################################
+
+GOOGLE MAPS PLUGIN FOR RAVE
+
+This is a plugin intended for rave. It generates google map compatible
+png-files and also the necessary infrastructure to be able to view
+the products in google map.
+
+The installation is straightforward, just type 
+python setup.py install --prefix=<somewhere>.
+
+The configuration is a bit trickier. First of all you need to define what areas
+you will support. This is done by defining an xml file containing the wanted products,
+see web/smhi-areas.xml.
+
+Next step is to generate a java script file that will be loaded by the browsers.
+
+%> python src/GenerateProductInfo.py <xml-file>
+
+You will get a file called products.js as a result, copy this file into
+the web/ directory.
+
+All data files are expected to be placed in web/data/<prod>/year/month/day so
+if something is not working, verify that the files are placed in there.
+
+

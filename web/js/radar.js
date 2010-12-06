@@ -99,7 +99,6 @@ function change_prd() {
 }
 
 function change_center_boundary() {
-  alert("Fetching radar product for " + prd);
   var p = radar_products[prd];
   lat = p.lat;
   lon = p.lon;
