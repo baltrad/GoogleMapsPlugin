@@ -183,7 +183,6 @@
 
       // date of data
 	  <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='".date("Ymd")."';\n";}?>
-	  <!-- <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='20101026';\n";}?> -->
 
       //user-defined variables:
       
@@ -227,6 +226,14 @@
       if(navigator.userAgent.toLowerCase().indexOf("opera") != -1) {
         maxMapScale = 10;
       }
+      
+      // Called when window loads. A bit more controlled and we don't
+      // need to rely if body.onload is called before head initialization
+      //
+      function doloadwindow() {
+        initialize();
+      }
+      window.onload=doloadwindow;
     </script>
 
     <script src="./js/init.js" type="text/javascript"></script>
@@ -242,7 +249,8 @@
 	
   </head>
   
-  <body onload="initialize();" onunload="GUnload();">
+  <!--onload="initialize();" -->
+  <body onunload="GUnload();">
     <!-- content visible during loading of application -->
     <div id="loading">
 	<div class="centered">
