@@ -259,25 +259,6 @@ function last() {
   change_radar();
 }	
 
-function utc_dt(year, month, day, hour, minute){
-  var dt;
-  var time=new Date(Date.UTC(year,month-1,day,hour,minute));
-    
-  var begin_day = (31 - (Math.floor(5*year/4) + 4) % 7);
-  var end_day = (31 - (Math.floor(5*year/4) + 1) % 7);
-
-  var begin_time=new Date(Date.UTC(year,3-1,begin_day,1,0));
-  var end_time=new Date(Date.UTC(year,10-1,end_day,1,0));
-
-  if ((time >= begin_time) && (time < end_time)) {
-    dt=2;
-  } else {
-    dt=1;
-  }
-
-  return dt;
-}
-
 function pad (val, len) {
   val = String(val);
   len = len || 2;
@@ -287,6 +268,48 @@ function pad (val, len) {
   return val;
 }
 
+/*
+  Return the ISO 8601 datestring for the UTC time.
+ */
+function ISODateString_UTC(d){
+    return d.getUTCFullYear()+'-'
+        + pad(d.getUTCMonth()+1)+'-'
+        + pad(d.getUTCDate())+' '
+        + pad(d.getUTCHours())+':'
+        + pad(d.getUTCMinutes())+':'
+        + pad(d.getUTCSeconds())+'Z'}
+
+/*
+  Return the ISO string for the timezone time difference.
+  Eg: +03:30, -02:00
+*/
+function ISOTimeDifference(offset){
+    var hours = 0;
+    var minutes = 0;
+    var sign = "";
+    if(offset > 0) {
+        sign = "+";
+    } else {
+        sign = "-";
+        offset = -offset;
+    }
+    hours = Math.floor(offset / 60);
+    minutes = offset % 60;
+    return sign + pad(hours) + ":" +  pad(minutes);}
+
+/*
+  Return the ISO 8601 datestring for the local time.
+ */
+function ISODateString_Locale(d){
+    var offset = -d.getTimezoneOffset();
+    return d.getFullYear()+'-'
+        + pad(d.getMonth()+1)+'-'
+        + pad(d.getDate())+' '
+        + pad(d.getHours())+':'
+        + pad(d.getMinutes())+':'
+        + pad(d.getSeconds())+
+        ISOTimeDifference(offset)}
+
 function change_radar(){
   var year=texts_time[frame].substr(0,4)*1;	
   var month=texts_time[frame].substr(4,2)*1;
@@ -294,18 +317,11 @@ function change_radar(){
   var hour=texts_time[frame].substr(8,2)*1;	
   var minute=texts_time[frame].substr(10,2)*1;
     
-  var dt=utc_dt(year, month, day, hour, minute);
   var time=new Date(Date.UTC(year,month-1,day,hour,minute));
-  var timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+" UTC";
+  var timestring=ISODateString_UTC(time);
   document.getElementById('span_title_time_utc').innerHTML=timestring;		// UTC time
-    
-  var time=new Date(Date.UTC(year,month-1,day,hour+dt,minute));
-  if(dt==2) {
-    var selc="CEST";
-  } else {
-    var selc="CET";
-  }
-  timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+" "+selc;
+
+  timestring=ISODateString_Locale(time);
   document.getElementById('span_title_time_local').innerHTML=timestring;	// LOCAL time
 
   if(radar) {
