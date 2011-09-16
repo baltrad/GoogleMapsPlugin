@@ -64,8 +64,8 @@ function handle_radar_image_list()
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 function change_datadate() {
-  var str = window.document.getElementById('datadate').value;
-  var re=/^\d{4}[-]?\d{1,2}[-]?\d{1,2}$/
+  var str = window.document.getElementById('datadate_txt').value;
+  var re=/^\d{4}[-]?\d{1,2}[-]?\d{1,2}$/;
   str = str.toString();
   if (!str.match(re)) {
     alert("Enter valid date (yyyy-mm-dd or yyyymmdd).");
@@ -73,7 +73,9 @@ function change_datadate() {
   } else {
     datadate = "";
     for (i=0; i<=str.length; i++) {
-      if (str[i] != "-") datadate=datadate+str[i];
+        if (str.charAt(i) != "-") {
+            datadate+=str.charAt(i);
+        }
     }
     request_radar_image_list();
     change_update_time();
@@ -82,7 +84,7 @@ function change_datadate() {
 }
 
 function change_colorbar() {
-  document.getElementById('div_scl').innerHTML="<img src=\"./img/legendhmc.png\">";
+  document.getElementById('div_scl').innerHTML="<img src=\"./img/scl.png\">";
 }
 
 function change_prd() {
@@ -92,9 +94,9 @@ function change_prd() {
   request_radar_image_list();
   change_update_time();
   change_colorbar();
-  map.panTo(new GLatLng(lat, lon));
+  map.panTo(new google.maps.LatLng(lat, lon));
   map.setZoom(zoom);
-  map.zoomIn(new GLatLng(lat, lon), true, true);
+  map.zoomIn(new google.maps.LatLng(lat, lon), true, true);
   return false;
 }
 
@@ -109,10 +111,9 @@ function change_center_boundary() {
   swlon = p.swlon;
   ne = new google.maps.LatLng(nelat,nelon);
   sw = new google.maps.LatLng(swlat,swlon);
-  boundaries = new GLatLngBounds(sw, ne);  
-  map.panTo(new GLatLng(lat, lon));
-  map.setZoom(zoom);
-  map.zoomIn(new GLatLng(lat, lon), true, true);
+  boundaries = new google.maps.LatLngBounds(sw, ne);  
+  map.panTo(new google.maps.LatLng(lat, lon));
+  map.setZoom(zoom + 1);
 
   return false;
 }
@@ -138,8 +139,8 @@ function change_update_time() {
 // changing opacity and animation speed
 function change_opacity() {
   opacity=parseInt(document.getElementById('opacity').options[document.getElementById('opacity').selectedIndex].value);
-  if (document.getElementById('show').checked == true) {
-    radar.setOpacity(opacity); // Set radar layer transparency
+  if (document.getElementById('show').checked == true && radar.div_) {
+      radar.setOpacity(opacity); // Set radar layer transparency
   }
 }
 
@@ -311,6 +312,7 @@ function ISODateString_Locale(d){
         ISOTimeDifference(offset)}
 
 function change_radar(){
+  if(!texts_time || !texts_time[frame]) return;
   var year=texts_time[frame].substr(0,4)*1;	
   var month=texts_time[frame].substr(4,2)*1;
   var day=texts_time[frame].substr(6,2)*1;
@@ -324,16 +326,18 @@ function change_radar(){
   timestring=ISODateString_Locale(time);
   document.getElementById('span_title_time_local').innerHTML=timestring;	// LOCAL time
 
-  if(radar) {
-    // If already exists radar in map, delete it  
-    map.removeOverlay(radar);
+  if(!radar) {
+     radar = new ProjectedOverlay(map, images_rad[frame].src, boundaries, {id: "radar_img"});
   }
-  radar = EInsert.groundOverlay(images_rad[frame].src, boundaries);	// Create radar layer
-  map.addOverlay(radar);				// Add reprojected radar to map
+
+  var img = document.getElementById('radar_img');
+  if (img) {
+      img.src = radar.url_ = images_rad[frame].src;
+  }
   if (document.getElementById('show').checked == true) {
-    radar.setOpacity(opacity); // Set radar layer transparency
+      radar.setOpacity(opacity); // Set radar layer transparency
   } else {
-    radar.setOpacity(1);
+      radar.setOpacity(1);
   }
 }
 
@@ -345,8 +349,9 @@ function set_cookie(name, value, expire) {
 
 function currentMapTypeNumber(map){ 
   var type=-1; 
-  for(var ix=0;ix<map.getMapTypes().length;ix++){
-    if(map.getMapTypes()[ix]==map.getCurrentMapType()) type=ix; 
+  mapTypes = google.maps.MapTypeId;
+  for(var ix=0;ix<mapTypes.length;ix++){
+    if(mapTypes[ix]==map.getMapTypeId()) type=ix; 
   } 
   return type; 
 } 

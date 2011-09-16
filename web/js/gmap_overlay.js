@@ -1,174 +1,137 @@
-// EInsert.js 
-//
-//   This Javascript is provided by Mike Williams
-//   Community Church Javascript Team
-//   http://www.bisphamchurch.org.uk/   
-//   http://econym.org.uk/gmap/
-//
-//   This work is licenced under a Creative Commons Licence
-//   http://creativecommons.org/licenses/by/2.0/uk/
-//
-// Version 0.0 Experimental Version - no transparent PNG support in IE
-// Version 0.1 Initial release version - AlphaImageLoader for IE added
-// Version 0.2 Wasn't positioning to the centre of the insert correctly
-// Version 0.3 Add zindex parameter
-// Version 1.0 Add .makeDraggable() [requires API v2.59]
-// Version 1.1 18/10/2006 use pane 1 instead of G_MAP_MAP_PANE so as to be above GTileLayerOverlay()s
-// Version 1.2 02/04/2007 work with MarkerManager
-// Version 1.3 16/05/2007 Add isHidden(), supportsHide(), setImage(), setZindex(), setSize() and setPoint()
-// Version 1.4 17/09/2007 Remove direct reference to the "map" variable (thanks to Philippe Matet)
-// Version 1.5 21/01/2008 EInsert.groundOverlay()
-// Version 1.6 29/10/2009 Fix EInsert.groundOverlay() bug: didn't cope with bounds that crossed the dateline
+// Create an overlay on the map from a projected image - Maps v3...
+// Author. John D. Coryat 05/2009 USNaviguide LLC - http://www.usnaviguide.com
+// Thanks go to Mile Williams EInsert: http://econym.googlepages.com/einsert.js, Google's GOverlay Example and Bratliff's suggestion...
+// Opacity code from TPhoto: http://gmaps.tommangan.us/addtphoto.html
+// Modified by Bernat Puigdomenech: http://www.radar.mcgill.ca
 
-      function EInsert(point, image, size, basezoom, zindex) {
-        this.point = point;
-        this.image = image;
-        this.size = size;
-        this.basezoom = basezoom;
-        this.zindex=zindex||0;
-        // Is this IE, if so we need to use AlphaImageLoader
-        var agent = navigator.userAgent.toLowerCase();
-        
-        if ((agent.indexOf("msie") > -1) && (agent.indexOf("opera") < 1)){this.ie = true} else {this.ie = false}
-        this.hidden = false;
-      } 
-      
-      EInsert.prototype = new GOverlay();
+// This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License 
+// as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-      EInsert.prototype.initialize = function(map) {
-        var div = document.createElement("div");
-        div.style.position = "absolute";
-        div.style.zIndex=this.zindex;
-        if (this.zindex < 0) {
-           map.getPane(G_MAP_MAP_PANE).appendChild(div);
-        } else {
-           map.getPane(1).appendChild(div);
-        }
-        this.map_ = map;
-        this.div_ = div;
-      }
-      
-      EInsert.prototype.makeDraggable = function() {
-        this.dragZoom_ = this.map_.getZoom();
-        this.dragObject = new GDraggableObject(this.div_);
-        
-        this.dragObject.parent = this;
-        
-        GEvent.addListener(this.dragObject, "dragstart", function() {
-          this.parent.left=this.left;
-          this.parent.top=this.top;
-        });
+function ProjectedOverlay(map, imageUrl, bounds, opts)
+{
+ google.maps.OverlayView.call(this);
 
-      
-        GEvent.addListener(this.dragObject, "dragend", function() {
-          var pixels = this.parent.map_.fromLatLngToDivPixel(this.parent.point);
-          var newpixels = new GPoint(pixels.x + this.left - this.parent.left, pixels.y +this.top -this.parent.top);
-          this.parent.point = this.parent.map_.fromDivPixelToLatLng(newpixels);
-          this.parent.redraw(true);
-          GEvent.trigger(this.parent, "dragend", this.parent.point);
-        });    
-      }
+ this.map_ = map;
+ this.url_ = imageUrl ;
+ this.bounds_ = bounds ;
+ this.addZ_ = opts.addZoom || '' ;				// Add the zoom to the image as a parameter
+ this.id_ = opts.id || this.url_ ;				// Added to allow for multiple images
+ this.percentOpacity_ = opts.percentOpacity || 60 ;
+ this.div_ = null;
+ this.setMap(map);
+}
 
-      EInsert.prototype.remove = function() {
-        this.div_.parentNode.removeChild(this.div_);
-      }
+ProjectedOverlay.prototype = new google.maps.OverlayView();
 
-      EInsert.prototype.copy = function() {
-        return new EInsert(this.point, this.image, this.size, this.basezoom);
-      }
+ProjectedOverlay.prototype.createElement = function()
+{
+ var panes = this.getPanes() ;
+ var div = this.div_ ;
 
-      EInsert.prototype.redraw = function(force) {
-       if (force) {
-        var p = this.map_.fromLatLngToDivPixel(this.point);
-        var z = this.map_.getZoom();
-        var scale = Math.pow(2,(z - this.basezoom));
-        var h=this.size.height * scale;
-        var w=this.size.width * scale;
+ if (!div)
+ {
+  div = document.createElement("div");
+  div.style.position = "absolute" ;
+  var img = document.createElement("img");		
+  img.setAttribute('id',this.id_);			
+  div.appendChild(img);
+  this.div_ = div ;
+  this.lastZoom_ = -1 ;
+  if( this.percentOpacity_ )
+  {
+   this.setOpacity(this.percentOpacity_) ;
+  }
+  panes.overlayLayer.appendChild(div);
+ }
+}
 
-        this.div_.style.left = (p.x - w/2) + "px";
-        this.div_.style.top = (p.y - h/2) + "px";
+// Remove the main DIV from the map pane
 
-        if (this.ie) {
-          var loader = "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+this.image+"', sizingMethod='scale');";
-          this.div_.innerHTML = '<div style="height:' +h+ 'px; width:'+w+'px; ' +loader+ '" ></div>';
-        } else {
-          this.div_.innerHTML = '<img id="radar-img" style="image-rendering: -moz-crisp-edges; -ms-interpolation-mode: nearest-neighbor;" src="' +this.image+ '"  width='+w+' height='+h+' >';
-        }
-        
-        // Only draggable if current zoom = the initial zoom
-        if (this.dragObject) {
-          if (z != this.dragZoom_) {this.dragObject.disable();}
-        }
-        
-       } 
-      }
+ProjectedOverlay.prototype.remove = function()
+{
+ if (this.div_) 
+ {
+  this.setMap(null);
+  this.div_.parentNode.removeChild(this.div_);
+  this.div_ = null;
+ }
+}
 
-      EInsert.prototype.show = function() {
-        this.div_.style.display="";
-        this.hidden = false;
-      }
-      
-      EInsert.prototype.hide = function() {
-        this.div_.style.display="none";
-        this.hidden = true;
-      }
-      
-      EInsert.prototype.getPoint = function() {
-        return this.point;
-      }
+// Redraw based on the current projection and zoom level...
 
-      EInsert.prototype.supportsHide = function() {
-        return true;
-      }
+ProjectedOverlay.prototype.draw = function(firstTime)
+{
+ // Creates the element if it doesn't exist already.
 
-      EInsert.prototype.isHidden = function() {
-        return this.hidden;
-      }
-      
-      EInsert.prototype.setPoint = function(a) {
-        this.point = a;
-        this.redraw(true);
-      }
+ this.createElement();
 
-      EInsert.prototype.setImage = function(a) {
-        this.image = a;
-        this.redraw(true);
-      }
-      
-      EInsert.prototype.setZindex = function(a) {
-        this.div_.style.zIndex=a;
-      }
+ if (!this.div_)
+ {
+  return ;
+ }
 
-      EInsert.prototype.setSize = function(a) {
-        this.size = a;
-        this.redraw(true);
-      }
+ var c1 = this.get('projection').fromLatLngToDivPixel(this.bounds_.getSouthWest());
+ var c2 = this.get('projection').fromLatLngToDivPixel(this.bounds_.getNorthEast());
 
-      EInsert.groundOverlay = function(image, bounds, zIndex, proj,z) {
-        var proj = proj||G_NORMAL_MAP.getProjection();              
-        var z = z||17;
-        var sw = proj.fromLatLngToPixel(bounds.getSouthWest(),z);
-        var ne = proj.fromLatLngToPixel(bounds.getNorthEast(),z);
-        if (sw.x <= ne.x) {var nex=ne.x} else {var nex=ne.x+(256*Math.pow(2,z))}
-        var cPixel = new GPoint((sw.x+nex)/2, (sw.y+ne.y)/2);
-        var c = proj.fromPixelToLatLng(cPixel,z);
-        var s = new GSize(nex-sw.x, sw.y-ne.y);
-        return new EInsert(c, image, s, z, zIndex);
-      }
-      
-      EInsert.prototype.setOpacity = function(percentOpacity) {
-	if (percentOpacity) {
-	    if(percentOpacity<0){percentOpacity=0;}
-	    if(percentOpacity>100){percentOpacity=100;}
-	}        
-	
-	this.percentOpacity = percentOpacity;
-	if (this.percentOpacity) {        
-	    if(typeof(this.div_.style.filter)=='string'){this.div_.style.filter='alpha(opacity:'+this.percentOpacity+')';}
-	    if(typeof(this.div_.style.KHTMLOpacity)=='string'){this.div_.style.KHTMLOpacity=this.percentOpacity/100;}
-	    if(typeof(this.div_.style.MozOpacity)=='string'){this.div_.style.MozOpacity=this.percentOpacity/100;}
-	    if(typeof(this.div_.style.opacity)=='string'){this.div_.style.opacity=this.percentOpacity/100;}
-	}
-      }
-														
-         
+ if (!c1 || !c2) return;
+
+ // Now position our DIV based on the DIV coordinates of our bounds
+
+ this.div_.style.width = Math.abs(c2.x - c1.x) + "px";
+ this.div_.style.height = Math.abs(c2.y - c1.y) + "px";
+ this.div_.style.left = Math.min(c2.x, c1.x) + "px";
+ this.div_.style.top = Math.min(c2.y, c1.y) + "px";
+
+ // Do the rest only if the zoom has changed...
+ 
+ if ( this.lastZoom_ == this.map_.getZoom() )
+ {
+  return ;
+ }
+
+ this.lastZoom_ = this.map_.getZoom() ;
+
+ var url = this.url_ ;
+
+ if ( this.addZ_ )
+ {
+  url += this.addZ_ + this.map_.getZoom() ;
+ }
+ var img = document.getElementById(this.id_);
+ 
+ if (img.src != url) img.setAttribute('src',url);
+
+ img.setAttribute('width',this.div_.style.width);
+ img.setAttribute('height',this.div_.style.height);	
+}
+
+ProjectedOverlay.prototype.setOpacity=function(opacity)
+{
+ if (opacity < 0)
+ {
+  opacity = 0 ;
+ }
+ if(opacity > 100)
+ {
+  opacity = 100 ;
+ }
+ var c = opacity/100 ;
+
+ if (typeof(this.div_.style.filter) =='string')
+ {
+  this.div_.style.filter = 'alpha(opacity:' + opacity + ')' ;
+ }
+ if (typeof(this.div_.style.KHTMLOpacity) == 'string' )
+ {
+  this.div_.style.KHTMLOpacity = c ;
+ }
+ if (typeof(this.div_.style.MozOpacity) == 'string')
+ {
+  this.div_.style.MozOpacity = c ;
+ }
+ if (typeof(this.div_.style.opacity) == 'string')
+ {
+  this.div_.style.opacity = c ;
+ }
+}
+

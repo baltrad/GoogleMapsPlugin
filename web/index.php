@@ -12,23 +12,13 @@
     <meta name="robots" content="index,follow" />
     <meta name="description" content="BALTRAD Radar data viewer using Google Maps" />
     <meta name="keywords" content="radar,weather,precipitation" />
-
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>BALTRAD Google Maps Viewer</title>
 
     <!-- Scripts -->
-    <!-- Insert you Google API key here -->
-    <?php
-     $apikey = "ABQIAAAAie1FJlsZ1IHjUZy9kLXVsBSkNtQ1FpTmbuHudXp43VtqZwUIABQXwl5S2w77QiI7HjVCEpOSqCxtjw"; // localhost key
-    echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$apikey.'&hl=en&sensor=false" type="text/javascript"></script>';
-    echo '<script src="http://www.google.com/uds/api?file=uds.js&amp;v=1.0&amp;key='.$apikey.'" type="text/javascript"></script>';
-    ?>
-
-    <script src="http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js" type="text/javascript"></script>
-
-    <script src="./js/gmap_overlay.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>    <script src="js/gmap_overlay.js" type="text/javascript"></script>
 
     <!-- This script needs to be generated prior usage -->
-    
     <script src="./products.js" type="text/javascript"></script>
 
     <script type="text/javascript">
@@ -124,7 +114,7 @@
 	      if(isset($_COOKIE["radar_gmap"]["maptype"])){
 	        echo "var maptype='".$_COOKIE["radar_gmap"]["maptype"]."';\n";
 	      } else {
-	        echo "var maptype=G_PHYSICAL_MAP;\n";
+	        echo "var maptype=google.maps.MapTypeId.TERRAIN;\n";
 	      }
 	    }
 	  ?>
@@ -211,12 +201,12 @@
       var swlon = radar_products[radar_option_list[0]].swlon;
       var ne = new google.maps.LatLng(nelat,nelon);
       var sw = new google.maps.LatLng(swlat,swlon);
-      var boundaries = new GLatLngBounds(sw, ne);  
+      var boundaries = new google.maps.LatLngBounds(sw, ne);  
 
       //  minimum scale of map
       var minMapScale = 4;
       //  maximum scale of map
-      var maxMapScale = 14;
+      var maxMapScale = 11;
       // maxMapScale should be smaller for MSIE, since it is not able display so big image      
       if(navigator.userAgent.toLowerCase().indexOf("msie") != -1) {
         maxMapScale = 9;
@@ -250,18 +240,20 @@
   </head>
   
   <!--onload="initialize();" -->
-  <body onunload="GUnload();">
+    <body onunload="unload();">
     <!-- content visible during loading of application -->
     <div id="loading">
 	<div class="centered">
-	    <img src='./img/loading.gif' width="396" height="316" alt="" /><br />
+	    <img src='./img/loading.gif' alt="" /><br />
 	    Loading application, please wait ...
 	</div>
     </div>    
 
     <!-- content visible when application is loaded-->
     <div id="loaded">
-    <div id="map"></div>
+    <div id="map">
+        If this text does not disappear quickly, then your browser does not
+        support Google Maps API.</div>
 
 
     <!-- box with title image dates and copuright-->
@@ -272,18 +264,21 @@
       <span id="span_title_time_local">&nbsp;</span><br/>
       <div id="div_title_copy">&nbsp;</div>
     </div>
-    
+
+  <div id="search_location">
+    <input id="address" type="textbox" value="">
+    <input type="button" value="Search" onclick="codeAddress()">
+  </div>
+
   <div id="div_scl">
     <img src="./img/scl.png">
-  <a href="http://baltrad.eu/" title="BALTRAD - baltrad.eu" onclick="window.open(this.href); return false;">
-  <img src="./img/BALTRAD-logo-small128.png" alt="BALTRAD - baltrad.eu" /></a>
-  </div>
+    </div>
 
   <div id="div_controls">
     <div id="div_update_info">Updated: </div>
 
     <div id="div_setdatadate">
-      <form name="datadate" onsubmit="return false"><input type="text" size="19" id="datadate" onchange="return change_datadate()">
+      <form name="datadate" onsubmit="return false"><input type="text" size="19" id="datadate_txt" onchange="return change_datadate()">
     </div>
 
 	<div id="div_setprd">
@@ -393,7 +388,7 @@
 				  <option value="20">20%</option>
 				  <option value="10">10%</option>
 				  <option value="1">0%</option>
-				  <!-- value is 1 because 0 doesn't work -->
+				  <!-- value is 1 because 0 does not work -->
         </select></td>
 		</tr>
 		<tr>

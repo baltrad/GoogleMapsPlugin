@@ -2,6 +2,7 @@
 var map;
 var radar;
 var opacity;    
+var marker;
     
 // Radar variables
 var update_time = 300000;
@@ -18,48 +19,44 @@ var texts_time = new Array();	/* time */
 // ---------------------------------------------------------------------------------------------------------------
 
 function initialize() {
-  if (GBrowserIsCompatible()) {
-    map = new GMap2(document.getElementById("map"));
-	
+
+    /// Create map
+
     // Set map center and zoom
-    var point = new GLatLng(parseFloat(lat), parseFloat(lon));
+    var point = new google.maps.LatLng(parseFloat(lat), parseFloat(lon));
     if(zoom>maxMapScale) {
       zoom=maxMapScale;
     } 	
-    map.setCenter(point, parseInt(zoom));
-		
+    
+    viewportwidth = window.innerWidth;
+    if (!viewportwidth)
+        viewportwidth = document.body.clientWidth;
+    viewportheight = window.innerHeight;
     // Set default UI interface
-    map.addControl(new GLargeMapControl3D());
-    map.addControl(new GMapTypeControl());
-    map.addControl(new GScaleControl(), new GControlPosition(G_ANCHOR_BOTTOM_LEFT, new GSize(105,40)));     
-    map.enableDoubleClickZoom();
-    map.enableScrollWheelZoom();    
-    new GKeyboardHandler(map); // Keyboard enabled
+    var mapoptions = {
+        center: point,
+        zoom: parseInt(zoom),
+        disableDoubleClickZoom: false,
+        minZoom: minMapScale,
+        maxZoom: maxMapScale,
+        scrollwheel: true,
+        keyboaldShortcuts: true,
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
+        mapTypeControl: true,
+        mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR},
+        overviewMapControl: true,
+        overviewMapControlOptions: {opened: viewportwidth > 1024},
+        scaleControl: true,
+        streetViewControl: false
+    };
+        
+    map = new google.maps.Map(document.getElementById("map"), mapoptions);
 
-    // Add terrain map and set default map type
-    map.addMapType(G_PHYSICAL_MAP);
 
-    if(maptype.length==1){
-      maptype=map.getMapTypes()[maptype];    
-    }
-    map.setMapType(maptype);
-
-    // Restricting the range of Zoom Levels =====
-    var mapTypes = map.getMapTypes();
-    for (var i=0; i<mapTypes.length; i++) {
-      mapTypes[i].getMinimumResolution = function() {return minMapScale;}
-	    mapTypes[i].getMaximumResolution = function() {return maxMapScale;}
-    }
- 		
-    // Add Overview map
-    map.addControl(new GOverviewMapControl());
-		
-    // Add Local search button
-    map.addControl(new google.maps.LocalSearch(), new GControlPosition(G_ANCHOR_BOTTOM_LEFT,new GSize(105,5)));
-	   
-    // Add radar to map   
-    radar = EInsert.groundOverlay("./img/nic.png", boundaries);
-    map.addOverlay(radar);
+    /// Create radar overlay
+    
+    radar = new ProjectedOverlay(map, "./img/nic.png", boundaries, {id: "radar_img", percentOpacity: 60});
+    
 
     // Add name and copyright info into title box   
     document.getElementById('span_title_name').innerHTML=title_string_name;
@@ -85,11 +82,42 @@ function initialize() {
     update_radar_image_list();
 	
     change_center_boundary();
-    change_colorbar();
+    //change_colorbar();
     // Hide "loading" DIV and show loaded content
     setTimeout("document.getElementById('loading').style.display = 'none'; document.getElementById('loaded').style.visibility = 'visible';", 1000);
-	
-  }else{
-    alert("Sorry, the Google Maps API is not compatible with this browser !");
-  }	    
+
+
+
+
+    // Search bar
+    var element = document.getElementById('search_location');
+
+    map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(element);
+    geocoder = new google.maps.Geocoder();
 }
+
+function codeAddress() {
+    var address = document.getElementById("address").value;
+    if(marker) marker.setMap(null);
+    geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                map.setCenter(results[0].geometry.location);
+                marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+            } else {
+                alert("Geocode was not successful for the following reason: " + status);
+            }
+        });
+}
+
+
+function unload(){
+    try{
+        radar.setMap(null);
+        radar = null;
+    }catch(e){
+    }
+}
+    
