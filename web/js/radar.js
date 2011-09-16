@@ -277,8 +277,7 @@ function ISODateString_UTC(d){
         + pad(d.getUTCMonth()+1)+'-'
         + pad(d.getUTCDate())+' '
         + pad(d.getUTCHours())+':'
-        + pad(d.getUTCMinutes())+':'
-        + pad(d.getUTCSeconds())+'Z'}
+        + pad(d.getUTCMinutes())+'Z'}
 
 /*
   Return the ISO string for the timezone time difference.
@@ -307,8 +306,7 @@ function ISODateString_Locale(d){
         + pad(d.getMonth()+1)+'-'
         + pad(d.getDate())+' '
         + pad(d.getHours())+':'
-        + pad(d.getMinutes())+':'
-        + pad(d.getSeconds())+
+        + pad(d.getMinutes())+
         ISOTimeDifference(offset)}
 
 function change_radar(){
