@@ -7,7 +7,7 @@
     <meta http-equiv="last-modified" content="<?php $last_modified_time=filemtime("./index.php") ; echo gmdate("D, d M Y H:i:s", $last_modified_time)." GMT";?>" />
     <meta http-equiv="pragma" content="no-cache, must-revalidate" />
     <meta http-equiv="cache-control" content="no-cache, must-revalidate" />
-
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8" />
     <meta name="author" content="" />
     <meta name="robots" content="index,follow" />
     <meta name="description" content="BALTRAD Radar data viewer using Google Maps" />
