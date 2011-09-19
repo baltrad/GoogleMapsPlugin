@@ -47,6 +47,10 @@ function handle_radar_image_list()
   if (xmlHttp_list.readyState == 4) {
     if (xmlHttp_list.status == 200) {
       document.getElementById('div_radar_img_list').innerHTML=xmlHttp_list.responseText;
+      if(document.getElementById('radar_img_list').length == 0)
+          {
+              document.getElementById('radar_img_list').innerHTML = '<option value="-">Nothing loaded</option>';
+          }
       var time=new Date();
       var timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+":"+pad(time.getUTCSeconds())+" UTC";
       document.getElementById('div_update_info').innerHTML="Updated: "+timestring;
@@ -56,7 +60,7 @@ function handle_radar_image_list()
         anim();
       }
     } else{
-      alert("Error while loading list o images - error: " + xmlHttp_list.status + " - " + xmlHttp_list.statusText);
+        document.getElementById('radar_img_list').innerHTML='<option value="-">Could not load</option>';
     }
   }
 }
