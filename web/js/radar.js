@@ -30,9 +30,24 @@ function request_radar_image_list()
   if (xmlHttp_list){
     try {
       var url=script_for_radar_image_list;
-      url=url+"?nselect="+nselect+"&nload"+nload+"&datadate="+datadate+"&prd="+prd;
+      url=url+"?nselect="+nselect+"&nload"+nload+"&datadate="+datadate+"&legend="+"&prd="+prd;
       xmlHttp_list.open("GET", url, true);
       xmlHttp_list.onreadystatechange = handle_radar_image_list;
+      xmlHttp_list.send(null);
+    } catch(e) {
+      alert("Connection error - can't get list of images.");
+    }
+  }
+}
+
+function request_radar_legend()
+{
+  if (xmlHttp_list){
+    try {
+      var url=script_for_radar_image_list;
+      url=url+"?datadate="+datadate+"&legend=yes"+"&prd="+prd;
+      xmlHttp_list.open("GET", url, true);
+      xmlHttp_list.onreadystatechange = handle_radar_legend;
       xmlHttp_list.send(null);
     } catch(e) {
       alert("Connection error - can't get list of images.");
@@ -65,6 +80,14 @@ function handle_radar_image_list()
   }
 }
 
+function handle_radar_legend()
+{
+  if (xmlHttp_list.readyState == 4) {
+    if (xmlHttp_list.status == 200) {
+        document.getElementById('div_scl').innerHTML=xmlHttp_list.responseText;
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 function change_datadate() {
@@ -82,13 +105,14 @@ function change_datadate() {
         }
     }
     request_radar_image_list();
+    change_colorbar();
     change_update_time();
     return false;
   }
 }
 
 function change_colorbar() {
-  document.getElementById('div_scl').innerHTML="<img src=\"./img/scl.png\">";
+    request_radar_legend();
 }
 
 function change_prd() {
@@ -125,6 +149,7 @@ function change_center_boundary() {
 // refreshing of image list
 function update_radar_image_list() {
   request_radar_image_list();
+  change_colorbar();
   change_update_time();
 }
 

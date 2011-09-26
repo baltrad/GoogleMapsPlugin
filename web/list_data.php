@@ -1,4 +1,3 @@
-<select id="radar_img_list" multiple="multiple" size="10">
 <?php
   $nselect=$_GET["nselect"];
   if ($nselect == '') $nselect=6;
@@ -12,6 +11,12 @@
   $prd=$_GET["prd"];
   if ($prd == '') $prd="mosaic";
 
+  $legend=$_GET["legend"];
+  if ($legend == '') 
+    $legend=false;
+  else
+    $legend=true;
+
   $yyyy=substr($datadate,0,4);
   $mm=substr($datadate,4,2);
   $dd=substr($datadate,6,2);
@@ -19,9 +24,14 @@
   $data_dir='./data/'.$prd.'/'.$yyyy.'/'.$mm.'/'.$dd;
   $ImgArr = Array();
 
+  if(!$legend){
+
+  echo '<select id="radar_img_list" multiple="multiple" size="10">\n';
+
+
   $ImgDir=opendir($data_dir);
   while ($ImgFile = readdir($ImgDir)){
-    if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="index.php") {
+    if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="legend.png" && $ImgFile!="index.php") {
       $parts=explode(".",$ImgFile);
       $min=substr($parts[0],$parts[0].length-1,1);
       $ImgArr[count($ImgArr)] = $ImgFile;
@@ -47,5 +57,9 @@
     echo substr($isotimestamp,0,4)."-".substr($isotimestamp,4,2)."-".substr($isotimestamp,6,2)."  ";
     echo substr($isotimestamp,8,2).":".substr($isotimestamp,10,2)." UTC</option>\n";
   }
+  echo '</select>';
+  }else{
+    echo '<img src="'.$data_dir.'/legend.png" />';
+  }
 ?>
-</select>
+

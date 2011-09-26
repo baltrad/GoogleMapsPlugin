@@ -48,6 +48,8 @@ def generate(files, arguments):
     raise Exception, "%s already exists but is not a directory"%dname
   
   img.save(filename, transparency=0)
+  legend_name = os.path.join(dname, "legend.png")
+  creator.gmappalette().legend(title="dbz", legendheight=196).save(legend_name)
   return None
 
 if __name__ == '__main__':

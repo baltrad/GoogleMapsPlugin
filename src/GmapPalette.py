@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2010 Swedish Meteorological and Hydrological Institute, SMHI,
+Copyright (C) 2010, 2011 Swedish Meteorological and Hydrological Institute, SMHI,
 
 This file is part of GoogleMapsPlugin.
 
@@ -65,11 +65,22 @@ class GmapPalette(object):
     if kw.has_key("titlesize"):
       titlesize = kw["titlesize"]    
     
-    a = numpy.linspace(255, 0, num=legendheight)
-    legend = numpy.ones((legendheight,legendwidth+textwidth), numpy.uint8)*255
-    for i in range(a.size):
-      for j in range(legendwidth):
-        legend[i,j] = int(a[i])
+    a = numpy.linspace(255, 0, num=legendheight).astype(numpy.uint8)
+    scale = numpy.ones((legendheight,legendwidth+textwidth), numpy.uint8)*255
+    for j in range(legendwidth):
+      scale[:,j] = a
+
+    # padding
+    legend = numpy.ones((legendheight + 33, legendwidth+textwidth + 10),
+                        numpy.uint8) * 255
+    legend[23:23+legendheight, 10:10+legendwidth+textwidth] = scale
+
+    # border
+    legend[0, :] = 0
+    legend[-1, :] = 0
+    legend[:, 0] = 0
+    legend[:, -1] = 0
+    
     legendimg = Image.fromarray(legend, "L")
     legendimg.putpalette(self._palette)
     legendimg = legendimg.convert("RGBA")
@@ -77,7 +88,7 @@ class GmapPalette(object):
     font = ImageFont.truetype(fontpath,fontsize)
     
     for iph,idn in zip(self._physicalIntervals, self._dnIntervals):
-      draw.text((legendwidth+2, abs(self._tableLength-idn)+4),str(int(iph)),(0,0,0),font=font)
+      draw.text((legendwidth+12, abs(self._tableLength-idn)+4+23),str(int(iph)),(0,0,0),font=font)
       draw = ImageDraw.Draw(legendimg)
 
     # FIXME add background and transparency
