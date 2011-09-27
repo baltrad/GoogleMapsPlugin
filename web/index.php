@@ -17,7 +17,7 @@
 
     <!-- Scripts -->
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>    <script src="js/gmap_overlay.js" type="text/javascript"></script>
-
+    <script src="js/datetimepicker_css.js"></script>
     <!-- This script needs to be generated prior usage -->
     <script src="./products.js" type="text/javascript"></script>
 
@@ -278,7 +278,7 @@
     <div id="div_update_info">Updated: </div>
 
     <div id="div_setdatadate">
-      <form name="datadate" onsubmit="return false"><input type="text" size="19" id="datadate_txt" onchange="return change_datadate()">
+               <form name="datadate" onsubmit="return false"><input type="text" size="19" name='datadate_field' id="datadate_txt" onchange="return change_datadate()" onclick="javascript:NewCssCal ('datadate_txt','yyyyMMdd','arrow',true,'24'); return false;">
     </div>
 
 	<div id="div_setprd">

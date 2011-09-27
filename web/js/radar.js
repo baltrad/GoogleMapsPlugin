@@ -30,24 +30,9 @@ function request_radar_image_list()
   if (xmlHttp_list){
     try {
       var url=script_for_radar_image_list;
-      url=url+"?nselect="+nselect+"&nload"+nload+"&datadate="+datadate+"&legend="+"&prd="+prd;
+      url=url+"?nselect="+nselect+"&nload"+nload+"&datadate="+datadate+"&prd="+prd;
       xmlHttp_list.open("GET", url, true);
       xmlHttp_list.onreadystatechange = handle_radar_image_list;
-      xmlHttp_list.send(null);
-    } catch(e) {
-      alert("Connection error - can't get list of images.");
-    }
-  }
-}
-
-function request_radar_legend()
-{
-  if (xmlHttp_list){
-    try {
-      var url=script_for_radar_image_list;
-      url=url+"?datadate="+datadate+"&legend=yes"+"&prd="+prd;
-      xmlHttp_list.open("GET", url, true);
-      xmlHttp_list.onreadystatechange = handle_radar_legend;
       xmlHttp_list.send(null);
     } catch(e) {
       alert("Connection error - can't get list of images.");
@@ -61,10 +46,17 @@ function handle_radar_image_list()
 {
   if (xmlHttp_list.readyState == 4) {
     if (xmlHttp_list.status == 200) {
-      document.getElementById('div_radar_img_list').innerHTML=xmlHttp_list.responseText;
+      response = xmlHttp_list.responseText;
+      first_line = response.split("\n", 1)[0];
+      response = response.substring(first_line.length);
+      document.getElementById('div_radar_img_list').innerHTML=response;
       if(document.getElementById('radar_img_list').length == 0)
           {
               document.getElementById('radar_img_list').innerHTML = '<option value="-">Nothing loaded</option>';
+          }
+      else
+          {
+              document.getElementById('div_scl').innerHTML=first_line;
           }
       var time=new Date();
       var timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+":"+pad(time.getUTCSeconds())+" UTC";
@@ -80,39 +72,31 @@ function handle_radar_image_list()
   }
 }
 
-function handle_radar_legend()
-{
-  if (xmlHttp_list.readyState == 4) {
-    if (xmlHttp_list.status == 200) {
-        document.getElementById('div_scl').innerHTML=xmlHttp_list.responseText;
-    }
-  }
-}
-
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------
 function change_datadate() {
   var str = window.document.getElementById('datadate_txt').value;
-  var re=/^\d{4}[-]?\d{1,2}[-]?\d{1,2}$/;
+  var re=/^\d{4}[-]?\d{1,2}[-]?\d{1,2} \d{1,2}:\d{1,2}$/;
   str = str.toString();
   if (!str.match(re)) {
-    alert("Enter valid date (yyyy-mm-dd or yyyymmdd).");
+    alert("Enter valid date (yyyy-mm-dd hh:mm or yyyymmdd hh:mm).");
     return false;
   } else {
     datadate = "";
     for (i=0; i<=str.length; i++) {
-        if (str.charAt(i) != "-") {
+        if (str.charAt(i) != "-" && 
+            str.charAt(i) != " " && 
+            str.charAt(i) != ":") {
             datadate+=str.charAt(i);
         }
     }
     request_radar_image_list();
-    change_colorbar();
     change_update_time();
     return false;
   }
 }
 
 function change_colorbar() {
-    request_radar_legend();
+    //    request_radar_legend();
 }
 
 function change_prd() {
