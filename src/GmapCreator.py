@@ -1,5 +1,5 @@
 '''
-Copyright (C) 2010 Swedish Meteorological and Hydrological Institute, SMHI,
+Copyright (C) 2010, 2011 Swedish Meteorological and Hydrological Institute, SMHI,
 
 This file is part of GoogleMapsPlugin.
 
@@ -80,9 +80,13 @@ class GmapCreator(object):
     return img
   
 if __name__ == "__main__":
+  import GmapLegend
   #creator = GmapCreator("../testdata/swecomposite_gmap.h5",gain=0.5,intercept=-32.0)
   creator = GmapCreator("../testdata/swecomposite_gmap.h5")
   img = creator.create_image()
   img.save("slask.png", transparency=0)
-  creator.gmappalette().legend(title="dbz", legendheight=196).save("legend.png")
+  GmapLegend.autogenerate_dbz_legend(gain=creator._gain,
+                                     offset=creator._intercept,
+                                     zr_a=200.0, zr_b=1.4).save("legend.png")
+  #creator.gmappalette().legend(title="dbz", legendheight=196).save("legend.png")
   
