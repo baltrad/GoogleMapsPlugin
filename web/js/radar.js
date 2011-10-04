@@ -130,9 +130,17 @@ function change_center_boundary() {
 
 // refreshing of image list
 function update_radar_image_list() {
-  request_radar_image_list();
-  change_colorbar();
-  change_update_time();
+    now = new Date();
+    window.document.getElementById('datadate_txt').value = '';
+    datadate = now.getUTCFullYear()+""
+        + pad(now.getUTCMonth()+1)+''
+        + pad(now.getUTCDate())+''
+        + pad(now.getUTCHours())+''
+        + pad(now.getUTCMinutes());
+
+    request_radar_image_list();
+    change_colorbar();
+    change_update_time();
 }
 
 function change_update_time() {

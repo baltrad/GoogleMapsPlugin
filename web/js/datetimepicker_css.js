@@ -941,7 +941,15 @@ function NewCssCal(pCtrl, pFormat, pScroller, pShowTime, pTimeMode, pShowSeconds
 {
 	// get current date and time
 
-	dtToday = new Date();
+	now = new Date();
+        dtToday = new Date(now.getUTCFullYear(),
+                           now.getUTCMonth(),
+                           now.getUTCDate(),
+                           now.getUTCHours(),
+                           now.getUTCMinutes(),
+                           now.getUTCSeconds(),
+                           now.getUTCMilliseconds());
+        alert(dtToday);
 	Cal = new Calendar(dtToday);
 
 	if (pShowTime !== undefined)
