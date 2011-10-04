@@ -172,7 +172,7 @@
 	  ?>
 
       // date of data
-	  <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='".date("Ymd")."';\n";}?>
+	  <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='".gmdate("YmdHi")."';\n";}?>
 
       //user-defined variables:
       

@@ -86,14 +86,14 @@ function initialize() {
     // Hide "loading" DIV and show loaded content
     setTimeout("document.getElementById('loading').style.display = 'none'; document.getElementById('loaded').style.visibility = 'visible';", 1000);
 
-
-
-
     // Search bar
     var element = document.getElementById('search_location');
 
     map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(element);
     geocoder = new google.maps.Geocoder();
+    if(rep){
+        anim();
+    }
 }
 
 function codeAddress() {

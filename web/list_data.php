@@ -31,7 +31,14 @@
   $data_dir_yesterday='./data/'.$prd.'/'.date('Y', $start_date).'/'.date('m', $start_date).'/'.date('d', $start_date);
   $ImgArr = Array();
 
-  echo '<img src="'.$data_dir.'/legend.png" />';
+  $legend_file = $data_dir.'/legend.png';
+
+  if(file_exists($legend_file)){
+    echo '<img src="'.$legend_file.'" />';
+  } else {
+    echo '<img src="./img/scl.png">';
+  }
+
   echo "\n";
 
   echo '<select id="radar_img_list" multiple="multiple" size="10">';

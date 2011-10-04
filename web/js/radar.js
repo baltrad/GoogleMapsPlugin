@@ -61,11 +61,7 @@ function handle_radar_image_list()
       var time=new Date();
       var timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+":"+pad(time.getUTCSeconds())+" UTC";
       document.getElementById('div_update_info').innerHTML="Updated: "+timestring;
-
       load_radar_images();
-      if ((timeout_id == null) && (loaded == 1)) {
-        anim();
-      }
     } else{
         document.getElementById('radar_img_list').innerHTML='<option value="-">Could not load</option>';
     }
@@ -104,11 +100,13 @@ function change_prd() {
   prd = tmp;
   change_center_boundary();
   request_radar_image_list();
+  radar.setMap(null);
+  radar = null;
+  radar = new ProjectedOverlay(map, "", boundaries, {id: "radar_img"});
   change_update_time();
   change_colorbar();
   map.panTo(new google.maps.LatLng(lat, lon));
-  map.setZoom(zoom);
-  map.zoomIn(new google.maps.LatLng(lat, lon), true, true);
+  map.setZoom(zoom + 1);
   return false;
 }
 
@@ -215,9 +213,7 @@ function load_radar_images() {
       pom_i++;
     }
   }
-	    
   loaded = 1;
-  last();
 }
 	
 function anim() {
