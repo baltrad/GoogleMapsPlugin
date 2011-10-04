@@ -23,18 +23,18 @@ along with RAVE.  If not, see <http://www.gnu.org/licenses/>.
 ## @author Daniel Michelson, SMHI
 ## @date 2010-12-20
 
-import string
+import os, string
 import Image, ImageFont, ImagePalette, ImageDraw
 import rave_zr
 import GmapColorMap
 
-FONT = "UbuntuTitling-Bold.ttf"
+FONT = os.path.join(os.path.split(GmapColorMap.__file__)[0], "UbuntuTitling-Bold.ttf")
 
 
 def autogenerate_dbz_legend(width=20, height=256, 
                         gain=0.4, offset=-30.0,
                         zr_a=200.0, zr_b=1.4,
-                        colors=GmapColorMap.BALTRAD_COLORS, 
+                        colors=GmapColorMap.dbzh, 
                         discrete=0, 
                         font=FONT, fontsize=12, titlesize=16):
     palette = GmapColorMap.interpolate_to_palette(colors)
@@ -118,8 +118,8 @@ if __name__ == "__main__":
     parser.add_option("-b", "--zr-b", dest="zrb", default="1.4",
                       help="Exponent b in Z-R relation, defaults to 1.4")
 
-    parser.add_option("-c", "--colors", dest="colors", default="DANIELS_21",
-                      help="Color-table name, from GmapColorMap, defaults to DANIELS_21 ...")
+    parser.add_option("-c", "--colors", dest="colors", default="DBZH",
+                      help="Color-table name, from GmapColorMap, defaults to DBZH ...")
 
     parser.add_option("-s", "--show", dest="show", default="True",
                       help="Display the result. Defaults to True")
@@ -135,7 +135,7 @@ if __name__ == "__main__":
                                              offset = float(options.offset),
                                              zr_a = float(options.zra),
                                              zr_b = float(options.zrb),
-                                             colors = options.colors)
+                                             colors = GmapColorMap.PALETTES[options.colors])
         legend.save(options.outfile)
         
         if eval(options.show):

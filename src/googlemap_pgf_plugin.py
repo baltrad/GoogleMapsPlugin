@@ -25,6 +25,7 @@ compatible png file.
 @date 2010-10-07
 '''
 import GmapCreator
+import GmapLegend
 import os
 #
 # @param files - an array of files, only first file will be used

@@ -60,9 +60,9 @@ if __name__ == "__main__":
   
   ipath = prefix+"/rave_gmap"
   
-  setup(name='Rave Google Maps Plugin',
+  setup(name='RAVE Google Maps Plugin',
         version='0.1',
-        description='Google maps plugin for rave',
+        description='Google Maps plugin for RAVE',
         author='Anders Henja',
         author_email='anders@baltrad.eu',
         url='http://www.baltrad.eu',
@@ -75,6 +75,7 @@ if __name__ == "__main__":
                     (ipath+'/web/js', glob.glob('web/js/*.js')),
                     (ipath+'/web', glob.glob('web/*.php')),
                     (ipath+'/web', glob.glob('web/*.xml')),
+                    (ipath+'/Lib', glob.glob('src/*.ttf')),
                     (ipath, ["README", "README.ravepgf", "README2", "LICENSE", "COPYING", "COPYING.LESSER"])]
        )
   
