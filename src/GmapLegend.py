@@ -34,10 +34,10 @@ FONT = os.path.join(os.path.split(GmapColorMap.__file__)[0], "UbuntuTitling-Bold
 def autogenerate_dbz_legend(width=20, height=256, 
                         gain=0.4, offset=-30.0,
                         zr_a=200.0, zr_b=1.4,
-                        colors=GmapColorMap.dbzh, 
+                        palette=GmapColorMap.dbzh, 
                         discrete=0, 
                         font=FONT, fontsize=12, titlesize=16):
-    palette = GmapColorMap.interpolate_to_palette(colors)
+
     this = Image.new('P', (width, height))
     data = list(this.getdata())
     for i in range(height):
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                       help="Exponent b in Z-R relation, defaults to 1.4")
 
     parser.add_option("-c", "--colors", dest="colors", default="DBZH",
-                      help="Color-table name, from GmapColorMap, defaults to DBZH ...")
+                      help="Color-table (palette) name, from GmapColorMap, defaults to DBZH ...")
 
     parser.add_option("-s", "--show", dest="show", default="True",
                       help="Display the result. Defaults to True")
