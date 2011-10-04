@@ -27,10 +27,9 @@ formatted HDF5 file, applies a color palette and writes a .png file.
 '''
 import _pyhl
 import Image
-import GmapColors
+import GmapColorMap
 
 class GmapCreator(object):
-  _colors = None
   _gmappalette = None
   _nodelist = None
   _node = None
@@ -39,7 +38,6 @@ class GmapCreator(object):
   _quantity = None
   
   def __init__(self, h5file, dataset="/dataset1/data1/data", whatgroup="/dataset1/what", **kw):
-    self._colors = GmapColors.GmapColors()
     self._nodelist = _pyhl.read_nodelist(h5file)
     self._node = self._nodelist.fetchNode(dataset)
     
@@ -60,7 +58,7 @@ class GmapCreator(object):
     else:
       self._quantity = kw["quantity"]
 
-    self._gmappalette = self._colors.palette(self._quantity, self._intercept, self._gain)
+    self._gmappalette = GmapColorMap.PALETTES[self._quantity]
 
   def _create_image(self):
     img = Image.fromarray(self._node.data(), "L")
@@ -75,7 +73,7 @@ class GmapCreator(object):
   def create_image(self):
     img = self._create_image()
     
-    img.putpalette(self._gmappalette.palette())
+    img.putpalette(self._gmappalette)
     
     return img
   
@@ -86,7 +84,6 @@ if __name__ == "__main__":
   img = creator.create_image()
   img.save("slask.png", transparency=0)
   GmapLegend.autogenerate_dbz_legend(gain=creator._gain,
-                                     offset=creator._intercept,
-                                     zr_a=200.0, zr_b=1.4).save("legend.png")
+                                     offset=creator._intercept).save("legend.png")
   #creator.gmappalette().legend(title="dbz", legendheight=196).save("legend.png")
   
