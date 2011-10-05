@@ -244,7 +244,7 @@
     <!-- content visible during loading of application -->
     <div id="loading">
 	<div class="centered">
-	    <img src='./img/loading.gif' alt="" /><br />
+	    <img src='./img/Radar2.gif' alt="" /><br />
 	    Loading application, please wait ...
 	</div>
     </div>    
