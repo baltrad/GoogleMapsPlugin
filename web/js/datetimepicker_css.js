@@ -949,7 +949,6 @@ function NewCssCal(pCtrl, pFormat, pScroller, pShowTime, pTimeMode, pShowSeconds
                            now.getUTCMinutes(),
                            now.getUTCSeconds(),
                            now.getUTCMilliseconds());
-        alert(dtToday);
 	Cal = new Calendar(dtToday);
 
 	if (pShowTime !== undefined)
