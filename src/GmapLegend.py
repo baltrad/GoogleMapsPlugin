@@ -23,7 +23,7 @@ along with RAVE.  If not, see <http://www.gnu.org/licenses/>.
 ## @author Daniel Michelson, SMHI
 ## @date 2010-12-20
 
-import os, string
+import os, string, copy
 import Image, ImageFont, ImagePalette, ImageDraw
 import rave_zr
 import GmapColorMap
@@ -38,6 +38,7 @@ def autogenerate_dbz_legend(width=20, height=256,
                         discrete=0, 
                         font=FONT, fontsize=12, titlesize=16):
 
+    palette = copy.deepcopy(palette)
     this = Image.new('P', (width, height))
     data = list(this.getdata())
     for i in range(height):
