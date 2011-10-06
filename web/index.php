@@ -278,7 +278,10 @@
     <div id="div_update_info">Updated: </div>
 
     <div id="div_setdatadate">
-               <form name="datadate" onsubmit="return false"><input type="text" size="19" name='datadate_field' id="datadate_txt" onchange="return change_datadate()" onclick="javascript:NewCssCal ('datadate_txt','yyyyMMdd','arrow',true,'24'); return false;">
+               <form name="datadate" onsubmit="return false">
+	       <img src="./img/calendar_icon.jpg" width="20px" onclick="javascript:NewCssCal ('datadate_txt','yyyyMMdd','arrow',true,'24'); return false;" />
+
+	       <input type="text" size="15" name='datadate_field' id="datadate_txt" onchange="return change_datadate()" /></form>
     </div>
 
 	<div id="div_setprd">

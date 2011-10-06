@@ -18,8 +18,21 @@ var texts_time = new Array();	/* time */
     
 // ---------------------------------------------------------------------------------------------------------------
 
-function initialize() {
+var Browser = {
+  Version: function() {
+    var version = 999; // we assume a sane browser
+    if (navigator.appVersion.indexOf("MSIE") != -1)
+      // bah, IE again, lets downgrade version number
+      version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+    return version;
+  }
+}
 
+function initialize() {
+    if (Browser.Version() < 8) {
+        alert("You are running an old version of Microsoft Internet Explorer that is not W3C compliant. Please use Firefox, Chrome, Opera, Safari, or Explorer version 8 or higher.");
+        return false;
+    }
     /// Create map
 
     // Set map center and zoom
