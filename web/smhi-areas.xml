@@ -12,7 +12,10 @@
 -->
 
 <productlist>
-  <product name="swegmaps_2000" description="SMHI Composite" zoom="4"/>
+  <product name="swegmaps_2000" description="Swedish Composite" zoom="4"/>
+  <product name="fingmaps_2000" description="Finnish Composite" zoom="4"/>
+  <product name="polgmaps_2000" description="Polish Composite" zoom="4"/>
+  <product name="bltgmaps_4000" description="BALTRAD 2 km" zoom="3"/>
 </productlist>
 
 

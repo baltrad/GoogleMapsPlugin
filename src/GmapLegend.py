@@ -136,7 +136,7 @@ if __name__ == "__main__":
                                              offset = float(options.offset),
                                              zr_a = float(options.zra),
                                              zr_b = float(options.zrb),
-                                             colors = GmapColorMap.PALETTES[options.colors])
+                                             palette = GmapColorMap.PALETTES[options.colors])
         legend.save(options.outfile)
         
         if eval(options.show):
