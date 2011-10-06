@@ -70,7 +70,7 @@ if __name__ == "__main__":
         packages=[""],
         package_dir={"": "src"},
         data_files=[(ipath+'/web/css', glob.glob('web/css/*.css')),
-                    (ipath+'/web/img', glob.glob('web/img/*.png')),
+                    (ipath+'/web/img', glob.glob('web/img/*.png')+glob.glob('web/img/*.jpg')+glob.glob('web/img/*.gif')),
                     (ipath+'/web/img', glob.glob('web/img/*.ico')),
                     (ipath+'/web/js', glob.glob('web/js/*.js')),
                     (ipath+'/web', glob.glob('web/*.php')),
