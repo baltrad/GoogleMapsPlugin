@@ -30,7 +30,7 @@ var Browser = {
 
 function initialize() {
     if (Browser.Version() < 8) {
-        alert("You are running an old version of Microsoft Internet Explorer that is not W3C compliant. Please use Firefox, Chrome, Opera, Safari, or Explorer version 8 or higher.");
+        alert("You are running an old version of Microsoft Internet Explorer that is not W3C compliant. Please use Firefox, Chrome, Opera, Safari, or Explorer version 8 or higher.\n\nIf you see this message and are running Explorer 8, then you are probably running it in so-called Compatibility mode which must be disabled for the browser to be W3C compliant.");
         return false;
     }
     /// Create map
