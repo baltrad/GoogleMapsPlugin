@@ -28,7 +28,7 @@ import Image, ImageFont, ImagePalette, ImageDraw
 import rave_zr
 import GmapColorMap
 
-FONT = os.path.join(os.path.split(GmapColorMap.__file__)[0], "UbuntuTitling-Bold.ttf")
+FONT = os.path.join(os.path.split(GmapColorMap.__file__)[0], "CALIBRI.TTF")
 
 
 def autogenerate_dbz_legend(width=20, height=256, 
@@ -84,7 +84,7 @@ def autogenerate_dbz_legend(width=20, height=256,
     # Add titles
     dfont = ImageFont.truetype(font, titlesize)
     draw.text((5, 4), "dBZ", font=dfont, fill=255)
-    draw.text((xshift+width-6, 4), "mm/h", font=dfont, fill=255)
+    draw.text((xshift+width-2, 4), "mm/h", font=dfont, fill=255)
 
     # Put a box around the whole thing
     xsize, ysize = that.size
