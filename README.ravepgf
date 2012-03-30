@@ -1,3 +1,6 @@
 
 ./pgf_registry -a -H http://localhost:8085/RAVE -n se.smhi.rave.creategmapimage -m googlemap_pgf_plugin -f generate -s outfile
 
+
+./pgf_registry -a -H http://localhost:8085/RAVE -n eu.baltrad.beast.creategmap -m googlemap_pgf_plugin -f generate -s outfile
+
