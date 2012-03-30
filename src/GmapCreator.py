@@ -37,7 +37,7 @@ class GmapCreator(object):
   _intercept = None
   _quantity = None
   
-  def __init__(self, h5file, dataset="/dataset1/data1/data", whatgroup="/dataset1/what", **kw):
+  def __init__(self, h5file, dataset="/dataset1/data1/data", whatgroup="/dataset1/data1/what", **kw):
     self._nodelist = _pyhl.read_nodelist(h5file)
     self._node = self._nodelist.fetchNode(dataset)
     
