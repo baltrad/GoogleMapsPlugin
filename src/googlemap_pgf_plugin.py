@@ -28,6 +28,13 @@ import GmapCreator
 import GmapLegend
 import os
 
+ravebdb = None
+try:
+  import rave_bdb
+  ravebdb = rave_bdb.rave_bdb()
+except:
+  pass
+
 ## Creates a dictionary from a rave argument list
 #@param arglist the argument list
 #@return a dictionary
@@ -60,8 +67,8 @@ def toNumber(sval):
 # @param arguments array of two arguments, ["outfile", <name of file to be saved>]
 # @return None
 #
-def generate(files, arguments):
-  creator = GmapCreator.GmapCreator(files[0])
+def generate_image(file, arguments):
+  creator = GmapCreator.GmapCreator(file)
   img = creator.create_image()
   filename=None
   args = arglist2dict(arguments)
@@ -89,6 +96,23 @@ def generate(files, arguments):
     #creator.gmappalette().legend(title="dbz", legendheight=196).save(legend_name)
 
   return None
+
+#
+# @param files - an array of files, only first file will be used
+# @param arguments array of two arguments, ["outfile", <name of file to be saved>]
+# @return None
+#
+def generate(files, arguments):
+  tmp = None
+  if ravebdb != None and not os.path.exists(files[0]):
+    try:
+      tmp = ravebdb.get_file(files[0])
+      return generate_image(tmp, arguments)
+    finally:
+      if os.path.exists(tmp):
+        os.unlink(tmp)
+  else:
+    return generate_image(files[0], arguments)
 
 if __name__ == '__main__':
   pass
