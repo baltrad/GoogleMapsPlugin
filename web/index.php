@@ -171,6 +171,23 @@
 	    }
 	  ?>
 
+      
+      // Quality background field
+	  <?php
+	    if(isset($_GET["qind"])){
+	      echo "var qind='".$_GET["qind"]."';\n";
+	      $quality = $_GET["qind"];
+	    } else {
+	      if(isset($_COOKIE["radar_gmap"]["qind"])){
+	        echo "var qind='".$_COOKIE["radar_gmap"]["qind"]."';\n";
+		$quality = $_COOKIE["radar_gmap"]["qind"];
+	      } else {
+	        echo "var qind='qvoid';\n";
+		$quality = 'qvoid';
+	      }
+	    }
+	  ?>
+
       // date of data
 	  <?php if(isset($_GET["datadate"])){echo "var datadate='".$_GET["datadate"]."';\n";}else{echo "var datadate='".gmdate("YmdHi")."';\n";}?>
 
@@ -186,7 +203,7 @@
 
       // copyright info
       //var title_string_copyright='(c): <a target="_blank" href="http://www.knmi.nl/opera/">EUMETNET-OPERA participants</a>';
-      //var title_string_copyright='&copy; <a target="_blank" href="http://baltrad.eu/">BALTRAD participants</a>';
+      //var title_string_copyright='&copy; <a target="_blank" href="http://baltrad.eu/">BALTRAD Partnership</a>';
       var title_string_copyright='';
 
       // name of script that makes list of radar images  
@@ -343,42 +360,42 @@
        <input type="button" id="input_first" value="|<" onclick="first();" /></td><td>
        <input type="button" id="input_previous" value=" < " onclick="previous();" /></td><td>
        <input type="button" id="input_play" value=">>" onclick="if (timeout_id == null) anim();" /></td><td>
-       <input type="button" id="input_pause" value=" | | " onclick="if (timeout_id) { clearTimeout(timeout_id); timeout_id=null; }" /></td><td>
+       <input type="button" id="input_pause" value=" || " onclick="if (timeout_id) { clearTimeout(timeout_id); timeout_id=null; }" /></td><td>
        <input type="button" id="input_next" value=" > " onclick="next();" /></td><td>
        <input type="button" id="input_last" value=">|" onclick="last();" /></td>
       </tr></table><br/>
 
 		<table style="position:relative; margin: 0 auto;">
 		<tr>
-			<td align='right'>anim. speed:&nbsp;</td>
-			<td align='left'>			
+			<td align='right'>loop speed:&nbsp;</td>
+			<td align='center' colspan=2>			
         <select id="rep_time" onchange="change_rep_time();">
-				  <option value="250">250 ms</option>
-				  <option value="500">500 ms</option>
-				  <option value="750">750 ms</option>
-				  <option value="1000">1 s</option>
-				  <option value="2000">2 s</option>
-				  <option value="5000">5 s</option>
+				  <option value="250">1/4 sec</option>
+				  <option value="500">1/2 sec</option>
+				  <option value="750">3/4 sec</option>
+				  <option value="1000">1 sec</option>
+				  <option value="2000">2 sec</option>
+				  <option value="5000">5 sec</option>
         </select>
 			</td>
 		</tr>
 		<tr>
 			<td align='right'>last image:&nbsp;</td>
-			<td align='left'>
+			<td align='center' colspan=2>
         <select id="add_time" onchange="change_add_time();">
-				  <option value="250">+250 ms</option>
-				  <option value="500">+500 ms</option>
-				  <option value="750">+750 ms</option>
-				  <option value="1000">+1 s</option>
-				  <option value="2000">+2 s</option>
-				  <option value="5000">+5 s</option>
-				  <option value="10000">+10 s</option>
+				  <option value="250">+ 1/4 sec</option>
+				  <option value="500">+ 1/2 sec</option>
+				  <option value="750">+ 3/4 sec</option>
+				  <option value="1000">+ 1 sec</option>
+				  <option value="2000">+ 2 sec</option>
+				  <option value="5000">+ 5 sec</option>
+				  <option value="10000">+ 10 sec</option>
     		</select>
       </td>
 		</tr>
 		<tr>
 			<td align='right'>opacity:&nbsp;</td>
-      <td align='left'>
+      <td align='left' colspan=2>
         <select id="opacity" onchange="change_opacity();">
 				  <option value="100">100%</option>
 				  <option value="90">90%</option>
@@ -398,9 +415,34 @@
 			<td align='right'>show:&nbsp;</td>
       <td align='left'>
 	<form>
-	  <input checked="yes" type="checkbox" name="show" id="show" onchange="toggle_opacity();"><br/>
+	  <input checked="checked" type="checkbox" name="show" id="show" onchange="toggle_opacity();"><br/>
 	</form>
 	</td>
+		</tr>
+		<tr>
+			<td align='right'>background:&nbsp;</td>
+      <td align='left' colspan=4>
+		<?php
+                echo '<select name="show" id="qind" onchange="toggle_quality();" title="Grey-scale indicators of data quality">';
+
+		if($quality == "qvoid")
+		   echo '<option value="qvoid" selected="selected" title="Nothing">None</option>';
+		else
+		   echo '<option value="qvoid" title="Nothing">None</option>';
+		if($quality == "qanom")
+		   echo '<option value="qanom" selected="selected" title="Probability (darker=lower, lighter=higher) of non-precipitation">Anomalies</option>';
+		else
+		   echo '<option value="qanom" title="Probability (darker=lower, lighter=higher) of non-precipitation">Anomalies</option>';
+		if($quality == "qblock")
+		   echo '<option value="qblock" selected="selected" title="Amount of topographical beam blockage">Blockage</option>';
+		else
+		   echo '<option value="qblock" title="Amount of topographical beam blockage">Blockage</option>';
+		if($quality == "pover")
+		   echo '<option value="pover" selected="selected" title="Probability of overshooting">Detectability</option>';
+		else
+		   echo '<option value="pover" title="Probability of overshooting">Detectability</option>';
+			?>
+        </select></td>
 		</tr>
 		</table><br/>
 		

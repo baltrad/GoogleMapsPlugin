@@ -59,8 +59,8 @@ function handle_radar_image_list()
               document.getElementById('div_scl').innerHTML=first_line;
           }
       var time=new Date();
-      var timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+":"+pad(time.getUTCSeconds())+" UTC";
-      document.getElementById('div_update_info').innerHTML="Updated: "+timestring;
+      var timestring=pad(time.getUTCFullYear())+"-"+pad(time.getUTCMonth()+1)+"-"+pad(time.getUTCDate())+" "+pad(time.getUTCHours())+":"+pad(time.getUTCMinutes())+":"+pad(time.getUTCSeconds())+"Z";
+      document.getElementById('div_update_info').innerHTML="Updated:<br />"+timestring;
       load_radar_images();
     } else{
         document.getElementById('radar_img_list').innerHTML='<option value="-">Could not load</option>';
@@ -98,15 +98,21 @@ function change_colorbar() {
 function change_prd() {
   var tmp = window.document.getElementById('prd').value;
   prd = tmp;
+  is_anim = timeout_id;
+  stop();
   change_center_boundary();
   request_radar_image_list();
   radar.setMap(null);
   radar = null;
   radar = new ProjectedOverlay(map, "", boundaries, {id: "radar_img"});
   change_update_time();
-  change_colorbar();
   map.panTo(new google.maps.LatLng(lat, lon));
   map.setZoom(zoom + 1);
+  toggle_quality();
+  if(is_anim)
+      {
+          anim();
+      }
   return false;
 }
 
@@ -172,6 +178,15 @@ function toggle_opacity() {
   }
 }
 
+function toggle_quality() {
+  quality = document.getElementById('qind').options[document.getElementById('qind').selectedIndex].value;
+  change_radar();
+}
+
+// Set background quality indicator field
+//function change_qind() {
+//  qind = document.getElementById('qind').options[document.getElementById('qind').selectedIndex].value;
+//}
 
 function change_rep_time() {
   rep_time =  parseInt(document.getElementById('rep_time').options[document.getElementById('rep_time').selectedIndex].value);
@@ -186,10 +201,21 @@ function loaded_info() {
   document.getElementById('input_load').value = "Loaded: (" + num_loaded + " / " + (nselect) + ") images";
 }
 
+
+function basename(path) {
+    return path.replace(/\\/g,'/').replace( /.*\//, '' );
+}
+     
+function dirname(path) {
+    return path.replace(/\\/g,'/').replace(/\/[^\/]*$/, '');;
+}
+
+
 // loading images into memory
 function load_radar_images() {
   loaded = 0;
   num_loaded=0;      
+
   // clear current images from memory
   for(var i=nselect-1; i>=0; i--) {
     delete images_rad[i]; 
@@ -216,15 +242,24 @@ function load_radar_images() {
       var parts=document.getElementById('radar_img_list').options[i].value.split(";");
       images_rad[pom_i] = new Image();
       images_rad[pom_i].onload = loaded_info;
-      images_rad[pom_i].src=parts[1];
-      texts_time[pom_i]=parts[0];			
+      images_rad[pom_i].src = parts[1];
+      images_qual["qblock"][pom_i] = new Image();
+      images_qual["qblock"][pom_i].src = dirname(parts[1]) + "/se.smhi.detector.beamblockage/" + parts[0] + ".png";
+      images_qual["qanom"][pom_i] = new Image();
+      images_qual["qanom"][pom_i].src = dirname(parts[1]) + "/fi.fmi.ropo.detector.classification/" + parts[0] + ".png";
+      //images_qual["pover"][pom_i] = new Image();
+      //images_qual["pover"][pom_i].src = dirname(parts[1]) + "/fi.fmi.ropo.detector.classification/" + parts[0] + ".png";
+      texts_time[pom_i] = parts[0];			
       pom_i++;
     }
   }
   loaded = 1;
+  anim();
 }
 	
 function anim() {
+  if(loaded == 0 || nselect == 0) return;
+  stop();
   frame = (frame +1)% nselect;
   change_radar();
 
@@ -238,13 +273,19 @@ function anim() {
   timeout_id = setTimeout("anim()",total_time);
 }
 
+function stop() {
+  if (timeout_id) {
+    clearTimeout(timeout_id); 
+    timeout_id=null;
+  }	
+}
+
 function next() {
   if ((timeout_id) && (loaded == 1)) {
     clearTimeout(timeout_id); 
     timeout_id=null;
   }	
   frame = (frame +1)% nselect;
-  change_radar();
 }
 
 function previous() {
@@ -340,14 +381,27 @@ function change_radar(){
 
   timestring=ISODateString_Locale(time);
   document.getElementById('span_title_time_local').innerHTML=timestring;	// LOCAL time
-
   if(!radar) {
-     radar = new ProjectedOverlay(map, images_rad[frame].src, boundaries, {id: "radar_img"});
+      radar = new ProjectedOverlay(map, images_rad[frame].src, boundaries, {id: "radar_img"});
   }
 
-  var img = document.getElementById('radar_img');
-  if (img) {
-      img.src = radar.url_ = images_rad[frame].src;
+  var canvas = document.getElementById('radar_img');
+  if (canvas) {
+      var ctx = canvas.getContext('2d');
+      img = images_rad[frame];
+      canvas.width = img.width;
+      canvas.height = img.height;
+      radar.url_ = images_rad[frame].src;
+      ctx.drawImage(img, 0, 0);
+      try{
+	  if (quality != "qvoid"){
+	      ctx.globalCompositeOperation = 'destination-over';
+	      img2 = images_qual[quality][frame];
+	      ctx.drawImage(img2, 0, 0);
+	  }
+      }catch(e){}
+
+
   }
   if (document.getElementById('show').checked == true) {
       radar.setOpacity(opacity); // Set radar layer transparency
@@ -393,7 +447,7 @@ function save_cookies(){
   set_cookie("radar_gmap[opa]", document.getElementById('opacity').selectedIndex, expires);
   set_cookie("radar_gmap[maptype]", currentMapTypeNumber(map), expires);
   set_cookie("radar_gmap[nselect]", nselect, expires);
-    
+  set_cookie("radar_gmap[qind]", quality, expires);
   alert("Your current settings was saved!!");
 }
 
@@ -411,6 +465,7 @@ function clear_cookies(){
   set_cookie("radar_gmap[opa]", document.getElementById('opacity').selectedIndex, expires);
   set_cookie("radar_gmap[maptype]", currentMapTypeNumber(map), expires);
   set_cookie("radar_gmap[nselect]", nselect, expires);
+  set_cookie("radar_gmap[qind]", quality, expires);
 
   alert("Your current settings was cleared!!");
 }
@@ -428,6 +483,7 @@ function save_bookmark(){
   page=page+"&opa="+document.getElementById('opacity').selectedIndex;
   page=page+"&maptype="+currentMapTypeNumber(map);
   page=page+"&nselect="+nselect;
+  page=page+"&qind="+quality;
     
   if (window.sidebar) { // Mozilla Firefox
     window.sidebar.addPanel(title, page,"");

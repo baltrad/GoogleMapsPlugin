@@ -14,23 +14,22 @@ var add_time=2000;
 var loaded = 0;
 var timeout_id = null;
 var images_rad  = new Array();	/* radar */
+var images_qual  = new Array();	/* quality */
+images_qual["qblock"] = new Array();
+images_qual["qanom"] = new Array();
+images_qual["pover"] = new Array();
 var texts_time = new Array();	/* time */   
-    
+var quality = false;
 // ---------------------------------------------------------------------------------------------------------------
-
-var Browser = {
-  Version: function() {
-    var version = 999; // we assume a sane browser
-    if (navigator.appVersion.indexOf("MSIE") != -1)
-      // bah, IE again, lets downgrade version number
-      version = parseFloat(navigator.appVersion.split("MSIE")[1]);
-    return version;
-  }
+function isCanvasSupported(){
+  var elem = document.createElement('canvas');
+  return !!(elem.getContext && elem.getContext('2d'));
 }
 
 function initialize() {
-    if (Browser.Version() < 8) {
-        alert("You are running an old version of Microsoft Internet Explorer that is not W3C compliant. Please use Firefox, Chrome, Opera, Safari, or Explorer version 8 or higher.\n\nIf you see this message and are running Explorer 8, then you are probably running it in so-called Compatibility mode which must be disabled for the browser to be W3C compliant.");
+    if (!isCanvasSupported()) {
+        alert("This website uses HTML5 canvases. You are running a browser that does not support them. Please use a recent version of Firefox, Chrome, Opera, Safari, or a W3C-compliant version of Explorer.");
+	window.location = "http://www.baltrad.eu/"
         return false;
     }
     /// Create map
@@ -95,7 +94,8 @@ function initialize() {
     update_radar_image_list();
 	
     change_center_boundary();
-    //change_colorbar();
+
+    toggle_quality();
     // Hide "loading" DIV and show loaded content
     setTimeout("document.getElementById('loading').style.display = 'none'; document.getElementById('loaded').style.visibility = 'visible';", 1000);
 
@@ -104,9 +104,8 @@ function initialize() {
 
     map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(element);
     geocoder = new google.maps.Geocoder();
-    if(rep){
-        anim();
-    }
+    
+    
 }
 
 function codeAddress() {

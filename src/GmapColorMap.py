@@ -55,6 +55,8 @@ WEBSAFEGREY= (204,204,204)
 GREY10     = (210,210,210)
 GREY11     = (231,231,231)
 GREY12     = (252,252,252)
+NODATAGREY = ( 51, 51, 51)
+BACKGROUND = (238,204,  0)
 
 # NEXRAD-esque colors, based on Thomas Boevith's work. The following colors are all websafe.
 NLIGHTBLUE     = (187,221,238)
@@ -111,7 +113,7 @@ def interpolate_to_palette(COLORS):
 #dbzh = interpolate_to_palette(BALTRAD_COLORS)
 dbzh = interpolate_to_palette(DANIELS_21)
 # Tweak to give BALTRAD_COLORS a better shade for "nodata"
-dbzh[767], dbzh[766], dbzh[765] = WEBSAFEGREY
+dbzh[767], dbzh[766], dbzh[765] = NODATAGREY
 PALETTES["DBZH"] = dbzh
 
 

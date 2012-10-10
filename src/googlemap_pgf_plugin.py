@@ -17,12 +17,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with GoogleMapsPlugin.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------*/
 
-Actual plugin code that performs the generation of the google map
-compatible png file.
+Actual plugin code that performs the generation of the Google Maps
+compatible PNG files.
 
 @file
-@author Anders Henja (Swedish Meteorological and Hydrological Institute, SMHI)
-@date 2010-10-07
+@author Anders Henja and Daniel Michelson (Swedish Meteorological and Hydrological Institute, SMHI)
+@date 2012-10-04
 '''
 import GmapCreator
 import GmapLegend
@@ -62,14 +62,15 @@ def toNumber(sval):
       return float(sval)
 
   
-#
-# @param files - an array of files, only first file will be used
+##
+# Generator of PNG images and legend
+# @param file - input HDF5 file
 # @param arguments array of two arguments, ["outfile", <name of file to be saved>]
 # @return None
 #
-def generate_image(file, arguments):
+def generate_images(file, arguments):
   creator = GmapCreator.GmapCreator(file)
-  img = creator.create_image()
+  img, qinds = creator.create_images()
   filename=None
   args = arglist2dict(arguments)
   kw = {}
@@ -81,7 +82,7 @@ def generate_image(file, arguments):
   if "zr_b" in args.keys():
     kw["zr_b"] = toNumber(args["zr_b"])
 
-  dname = os.path.dirname(filename)
+  dname, fstr = os.path.split(filename)
   if not os.path.exists(dname):
     os.makedirs(dname)
   elif os.path.exists(dname) and not os.path.isdir(dname):
@@ -91,9 +92,20 @@ def generate_image(file, arguments):
   legend_name = os.path.join(dname, "legend.png")
   if not os.path.exists(legend_name):
     GmapLegend.autogenerate_dbz_legend(gain=creator._gain,
-                                     offset=creator._intercept,
+                                     offset=creator._offset,
                                      **kw).save(legend_name)
     #creator.gmappalette().legend(title="dbz", legendheight=196).save(legend_name)
+
+  for q in qinds.keys():
+    task, qimg = q, qinds[q]
+    qdname = os.path.join(dname, task)
+    qfilename = os.path.join(qdname, fstr)
+    if not os.path.exists(qdname):
+        os.makedirs(qdname)
+    if q == 'fi.fmi.ropo.detector.classification':
+      qimg.save(qfilename, transparency=0)
+    else:
+      qimg.save(qfilename)
 
   return None
 
@@ -107,12 +119,12 @@ def generate(files, arguments):
   if ravebdb != None and not os.path.exists(files[0]):
     try:
       tmp = ravebdb.get_file(files[0])
-      return generate_image(tmp, arguments)
+      return generate_images(tmp, arguments)
     finally:
       if os.path.exists(tmp):
         os.unlink(tmp)
   else:
-    return generate_image(files[0], arguments)
+    return generate_images(files[0], arguments)
 
 if __name__ == '__main__':
   pass
