@@ -247,8 +247,8 @@ function load_radar_images() {
       images_qual["qblock"][pom_i].src = dirname(parts[1]) + "/se.smhi.detector.beamblockage/" + parts[0] + ".png";
       images_qual["qanom"][pom_i] = new Image();
       images_qual["qanom"][pom_i].src = dirname(parts[1]) + "/fi.fmi.ropo.detector.classification/" + parts[0] + ".png";
-      //images_qual["pover"][pom_i] = new Image();
-      //images_qual["pover"][pom_i].src = dirname(parts[1]) + "/fi.fmi.ropo.detector.classification/" + parts[0] + ".png";
+      images_qual["pover"][pom_i] = new Image();
+      images_qual["pover"][pom_i].src = dirname(parts[1]) + "/se.smhi.detector.poo/" + parts[0] + ".png";
       texts_time[pom_i] = parts[0];			
       pom_i++;
     }
