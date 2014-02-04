@@ -49,7 +49,7 @@
   while ($ImgFile = readdir($ImgDir)){
     if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="legend.png" && $ImgFile!="index.php") {
       $parts=explode(".",$ImgFile);
-      $min=substr($parts[0],$parts[0].length-1,1);
+      $min=substr($parts[0],count($parts[0])-1,1);
       $ImgArr[count($ImgArr)] = $ImgFile;
     }
   }
@@ -59,7 +59,7 @@
   while ($ImgFile = readdir($ImgDir)){
     if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="legend.png" && $ImgFile!="index.php") {
       $parts=explode(".",$ImgFile);
-      $min=substr($parts[0],$parts[0].length-1,1);
+      $min=substr($parts[0],count($parts[0])-1,1);
       $ImgArr[count($ImgArr)] = $ImgFile;
     }
   }

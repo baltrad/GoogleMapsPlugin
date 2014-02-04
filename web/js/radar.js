@@ -286,6 +286,7 @@ function next() {
     timeout_id=null;
   }	
   frame = (frame +1)% nselect;
+  change_radar();
 }
 
 function previous() {
