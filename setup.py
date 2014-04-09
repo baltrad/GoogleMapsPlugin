@@ -76,6 +76,7 @@ if __name__ == "__main__":
                     (ipath+'/web', glob.glob('web/*.php')),
                     (ipath+'/web', glob.glob('web/*.xml')),
                     (ipath+'/Lib', glob.glob('src/*.TTF')),
+                    (ipath+'/Lib', glob.glob('src/*.xml')),
                     (ipath, ["README", "README.ravepgf", "README2", "LICENSE", "COPYING", "COPYING.LESSER"])]
        )
   

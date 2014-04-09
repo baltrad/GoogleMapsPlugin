@@ -26,6 +26,7 @@ compatible PNG files.
 '''
 import GmapCreator
 import GmapLegend
+from GmapLayerSettings import SETTINGS 
 import os
 
 ravebdb = None
@@ -97,13 +98,17 @@ def generate_images(file, arguments):
     #creator.gmappalette().legend(title="dbz", legendheight=196).save(legend_name)
 
   for q in qinds.keys():
+    try:
+      o = SETTINGS[q]
+    except KeyError:
+      o = SETTINGS["default"]
     task, qimg = q, qinds[q]
     qdname = os.path.join(dname, task)
     qfilename = os.path.join(qdname, fstr)
     if not os.path.exists(qdname):
         os.makedirs(qdname)
-    if q == 'fi.fmi.ropo.detector.classification':
-      qimg.save(qfilename, transparency=0)
+    if o.transparency:
+      qimg.save(qfilename, transparency=o.transval)
     else:
       qimg.save(qfilename)
 

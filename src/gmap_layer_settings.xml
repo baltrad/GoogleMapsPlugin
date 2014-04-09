@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<settings>
+  <quantities>
+    <DBZH palette="DBZH" />
+  </quantities>
+  <qc-layers>
+    <default create="True" negate="True" rgba="True" rgba_bg="51" rgba_max="1.0" transparency="False" transval="0" />
+    <se.smhi.composite.distance.radar create="False" />
+    <fi.fmi.ropo.detector.classification create="True" negate="False" rgba="False" transparency="True" />
+    <se.smhi.detector.beamblockage rgba_max="0.7" />
+    <se.smhi.detector.poo negate="False" />
+    <pl.imgw.radvolqc.att />
+    <pl.imgw.radvolqc.broad />
+    <pl.imgw.radvolqc.nmet />
+    <pl.imgw.radvolqc.speck />
+    <pl.imgw.radvolqc.spike />
+  </qc-layers>
+</settings>

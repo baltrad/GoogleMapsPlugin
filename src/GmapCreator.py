@@ -31,6 +31,7 @@ import _raveio
 import Image
 import GmapColorMap
 import numpy
+from GmapLayerSettings import SETTINGS
 
 class GmapCreator(object):
   _gmappalette = None
@@ -61,7 +62,7 @@ class GmapCreator(object):
     else:
       self._offset = kw["offset"]
       
-    self._gmappalette = GmapColorMap.PALETTES[quantity]
+    self._gmappalette = GmapColorMap.PALETTES[SETTINGS[quantity].palette]
 
 
   def _create_images(self):
@@ -69,8 +70,15 @@ class GmapCreator(object):
     img = Image.fromarray(self._quant.getData())
 
     for q in self._qinds.keys():
-        if q != "se.smhi.composite.distance.radar":
-            qinds[q] = Image.fromarray(self._qinds[q].getData())
+        try:
+            o = SETTINGS[q]
+        except KeyError:
+            o = SETTINGS["default"]
+        if o.create:
+            if o.negate:
+                qinds[q] = Image.fromarray(255 - self._qinds[q].getData())
+            else:
+                qinds[q] = Image.fromarray(self._qinds[q].getData())
 
     return img, qinds
 
@@ -84,10 +92,12 @@ class GmapCreator(object):
     
     img.putpalette(self._gmappalette)
     for q in qinds.keys():
-        if q == 'se.smhi.detector.beamblockage':
-            qinds[q] = makeRGBA(qinds[q])
-        elif q == 'se.smhi.detector.poo':
-            qinds[q] = makeRGBA(qinds[q], MAX=1.0)
+        try:
+            o = SETTINGS[q]
+        except KeyError:
+            o.SETTINGS["default"]
+        if o.rgba:
+            qinds[q] = makeRGBA(qinds[q], background=o.rgba_bg, MAX=o.rgba_max)
     
     return img, qinds
 
