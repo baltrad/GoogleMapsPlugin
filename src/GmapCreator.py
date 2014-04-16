@@ -95,7 +95,7 @@ class GmapCreator(object):
         try:
             o = SETTINGS[q]
         except KeyError:
-            o.SETTINGS["default"]
+            o = SETTINGS["default"]
         if o.rgba:
             qinds[q] = makeRGBA(qinds[q], background=o.rgba_bg, MAX=o.rgba_max)
     
