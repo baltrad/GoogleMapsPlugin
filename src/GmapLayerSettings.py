@@ -64,7 +64,7 @@ def init():
             opts = copy.deepcopy(default_opts)
             for k, i in e.items():
                 opts.__setattr__(k, eval(i))
-        SETTINGS[e.tag] = opts
+            SETTINGS[e.tag] = opts
 
     initialized = 1
 
