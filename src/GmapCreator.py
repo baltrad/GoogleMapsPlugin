@@ -27,7 +27,7 @@ fields are written in black&white.
 @author Anders Henja and Daniel Michelson (Swedish Meteorological and Hydrological Institute, SMHI)
 @date 2012-10-04
 '''
-import _raveio
+import _rave, _raveio
 import Image
 import GmapColorMap
 import numpy
@@ -41,9 +41,12 @@ class GmapCreator(object):
   _qinds = {}
   
   def __init__(self, h5file, quantity="DBZH", **kw):
-    obj = _raveio.open(h5file).object
-    comp = obj.getImage(0)  # assume only one "composite" in this file
-    self._quant = comp.getParameter(quantity)
+    rio = _raveio.open(h5file)
+    if rio.objectType == _rave.Rave_ObjectType_COMP:
+      prod = rio.object.getImage(0)  # assume only one "composite" in this file
+    elif rio.objectType == _rave.Rave_ObjectType_IMAGE:
+      prod = rio.object
+    self._quant = prod.getParameter(quantity)
 
     for i in range(self._quant.getNumberOfQualityFields()):
         qi = self._quant.getQualityField(i)
