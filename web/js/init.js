@@ -66,8 +66,8 @@ function initialize() {
 
 
     /// Create radar overlay
-    
-    radar = new ProjectedOverlay(map, "./img/nic.png", boundaries, {id: "radar_img", percentOpacity: 60});
+    /// ./img/nic.png Dont initialize overlay with nic.png it doesn't exist
+    radar = new ProjectedOverlay(map, "", boundaries, {id: "radar_img", percentOpacity: 60});
     
 
     // Add name and copyright info into title box   
