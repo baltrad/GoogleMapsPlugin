@@ -34,13 +34,13 @@ import numpy
 from GmapLayerSettings import SETTINGS
 
 class GmapCreator(object):
-  _gmappalette = None
-  _gain = None
-  _offset = None
-  _quant = None
-  _qinds = {}
-  
   def __init__(self, h5file, quantity="DBZH", **kw):
+    self._gmappalette = None
+    self._gain = None
+    self._offset = None
+    self._quant = None
+    self._qinds = {}
+  
     rio = _raveio.open(h5file)
     if rio.objectType == _rave.Rave_ObjectType_COMP:
       prod = rio.object.getImage(0)  # assume only one "composite" in this file
