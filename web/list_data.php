@@ -83,7 +83,7 @@
     $MM=substr($isotimestamp,10,2);
     $data_dir='./data/'.$prd.'/'.$yyyy.'/'.$mm.'/'.$dd;
     date_default_timezone_set('UTC');
-    $current_date = mktime($HH, $MM, 0, $mm, $dd, $yyyy);
+    $current_date = mktime($HH, $MM, 0, $mm, $dd, intval($yyyy));
     
     if ($current_date < $start_date || $current_date > $end_date)
       continue;
