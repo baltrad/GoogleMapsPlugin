@@ -131,4 +131,4 @@ def dump_palette_to_file(palette, filename):
     fd.close()
 
 if __name__ == "__main__":
-    print __doc__
+    print(__doc__)

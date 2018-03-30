@@ -112,7 +112,7 @@ class GenerateProductInfo(object):
         
         index = index + 1
         
-      except Exception, e:
+      except Exception:
         import traceback
         traceback.print_exc(file=sys.stdout)
       
@@ -121,16 +121,16 @@ class GenerateProductInfo(object):
 
 if __name__=="__main__":
   if len(sys.argv) != 2:
-    print "Usage: GenerateProductInfo <input-list>"
-    print "  input-list: A xml file containing a list of areas that should be used"
-    print ""
-    print "format of the xml file should be:"
-    print '''
+    print("Usage: GenerateProductInfo <input-list>")
+    print("  input-list: A xml file containing a list of areas that should be used")
+    print("")
+    print("format of the xml file should be:")
+    print('''
   <productlist>
     <product name="swegmaps_2000" description="SMHI Composite" zoom="4"/>
     <product name="area" description="description" zoom="4"/>
     ...
-  </productlist>'''
+  </productlist>''')
     sys.exit(255)
   
   a = GenerateProductInfo(sys.argv[1])

@@ -28,6 +28,10 @@ import GmapCreator
 import GmapLegend
 from GmapLayerSettings import SETTINGS 
 import os
+import sys
+
+if sys.version_info >= (3,):
+    long = int
 
 ravebdb = None
 try:
@@ -59,7 +63,7 @@ def toNumber(sval):
   else:
     try:
       return int(sval)
-    except ValueError, e:
+    except ValueError:
       return float(sval)
 
   
@@ -87,7 +91,7 @@ def generate_images(file, arguments):
   if not os.path.exists(dname):
     os.makedirs(dname)
   elif os.path.exists(dname) and not os.path.isdir(dname):
-    raise Exception, "%s already exists but is not a directory"%dname
+    raise Exception("%s already exists but is not a directory"%dname)
   
   img.save(filename, transparency=0)
   legend_name = os.path.join(dname, "legend.png")

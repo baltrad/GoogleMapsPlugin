@@ -41,13 +41,13 @@ if __name__ == "__main__":
   import sys, distutils, os, glob
   try:
     import _pyhl
-  except Exception, e:
-    print "Gmap rave plugin requires _pyhl in order to work properly"
+  except Exception:
+    print("Gmap rave plugin requires _pyhl in order to work properly")
 
   try:
     import _rave
-  except Exception, e:
-    print "Gmap rave plugin requires _rave in order to work properly"
+  except Exception:
+    print("Gmap rave plugin requires _rave in order to work properly")
     
   # Setup the default install prefix
   prefix = "/opt/baltrad"

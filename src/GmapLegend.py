@@ -24,7 +24,7 @@ along with RAVE.  If not, see <http://www.gnu.org/licenses/>.
 ## @date 2010-12-20
 
 import os, string, copy
-import Image, ImageFont, ImagePalette, ImageDraw
+from PIL import Image, ImageFont, ImagePalette, ImageDraw
 import rave_zr
 import GmapColorMap
 
@@ -47,7 +47,7 @@ def autogenerate_dbz_legend(width=20, height=256,
     this.putdata(data)
     
     xshift, yshift = 40, 20
-    that = Image.new('P', (width+xshift*2, height+yshift+(yshift/2)))
+    that = Image.new('P', (int(width+xshift*2), int(height+yshift+(yshift/2))))
     that.paste(this, (xshift,yshift))
     
     for i in range(3):
@@ -70,7 +70,7 @@ def autogenerate_dbz_legend(width=20, height=256,
         if 0 <= raw <= 255:
             draw.line(((xshift-5,yshift+255-raw),(xshift-1,yshift+255-raw)),fill=255) # left
             draw.text((0,yshift+255-raw-(0.5*fontsize-1)), 
-                      string.rjust(str(dbz),6), font=dfont, fill=255)
+                      str(dbz).rjust(6), font=dfont, fill=255)
     
     # Put ticks at selected values of mm/h
     for rr in (0.1, 0.3, 1, 3, 10, 30, 100, 300):
@@ -79,7 +79,7 @@ def autogenerate_dbz_legend(width=20, height=256,
             draw.line(((xshift+width,yshift+255-raw),
                        (xshift+width+5,yshift+255-raw)), fill=255) # right
             draw.text((xshift+width+5,yshift+255-raw-(0.5*fontsize-1)),
-                      string.rjust(str(rr), 6), font=dfont, fill=255)
+                      str(rr).rjust(6), font=dfont, fill=255)
     
     # Add titles
     dfont = ImageFont.truetype(font, titlesize)

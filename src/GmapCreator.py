@@ -28,9 +28,10 @@ fields are written in black&white.
 @date 2012-10-04
 '''
 import _rave, _raveio
-import Image
+from PIL import Image
 import GmapColorMap
 import numpy
+import sys
 from GmapLayerSettings import SETTINGS
 
 class GmapCreator(object):
@@ -53,14 +54,14 @@ class GmapCreator(object):
         task = qi.getAttribute("how/task")
         self._qinds[task] = qi
 
-    if not kw.has_key("gain"):
+    if not "gain" in kw:
       self._gain = self._quant.gain
       if self._gain == 0.0:
         raise ValueError('gain == 0.0')
     else:
       self._gain = kw["gain"]
       
-    if not kw.has_key("offset"):
+    if not "offset" in kw:
       self._offset = self._quant.offset
     else:
       self._offset = kw["offset"]
@@ -104,7 +105,6 @@ class GmapCreator(object):
     
     return img, qinds
 
-
 ## Create RGBA image with variable opacity
 # @param Pimg PIL Image object of type 'P'
 # @param background value (0-255) for the background grey value
@@ -114,7 +114,11 @@ def makeRGBA(Pimg, background=51, MAX=0.7):
   MAX = round(MAX * 255, 0) # keep this as a float
   shape = Pimg.size[1], Pimg.size[0]
   bg = numpy.zeros(shape, numpy.uint8) + background
-  Parr = numpy.reshape(numpy.fromstring(Pimg.tostring(), numpy.uint8), shape)
+  Parr=None
+  if sys.version_info >= (3,):
+      Parr = numpy.reshape(numpy.fromstring(Pimg.tobytes(), numpy.uint8), shape)
+  else:
+      Parr = numpy.reshape(numpy.fromstring(Pimg.tostring(), numpy.uint8), shape)
   alpha = numpy.where(numpy.less(Parr, int(MAX)), Parr/MAX*255, 255)
   alpha = Image.fromarray(alpha.astype(numpy.uint8))
   RGBA = Image.fromarray(bg).convert("RGBA")
@@ -126,7 +130,7 @@ if __name__ == "__main__":
   import GmapLegend
   #creator = GmapCreator("../testdata/swecomposite_gmap.h5",gain=0.5,offset=-32.0)
   creator = GmapCreator("../testdata/swecomposite_gmap.h5")
-  img = creator.create_image()
+  img, qinds = creator.create_images()
   img.save("slask.png", transparency=0)
   GmapLegend.autogenerate_dbz_legend(gain=creator._gain,
                                      offset=creator._offset).save("legend.png")
