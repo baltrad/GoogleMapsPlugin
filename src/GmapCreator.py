@@ -114,11 +114,7 @@ def makeRGBA(Pimg, background=51, MAX=0.7):
   MAX = round(MAX * 255, 0) # keep this as a float
   shape = Pimg.size[1], Pimg.size[0]
   bg = numpy.zeros(shape, numpy.uint8) + background
-  Parr=None
-  if sys.version_info >= (3,):
-      Parr = numpy.reshape(numpy.fromstring(Pimg.tobytes(), numpy.uint8), shape)
-  else:
-      Parr = numpy.reshape(numpy.fromstring(Pimg.tostring(), numpy.uint8), shape)
+  Parr = numpy.reshape(numpy.fromstring(Pimg.tobytes(), numpy.uint8), shape)
   alpha = numpy.where(numpy.less(Parr, int(MAX)), Parr/MAX*255, 255)
   alpha = Image.fromarray(alpha.astype(numpy.uint8))
   RGBA = Image.fromarray(bg).convert("RGBA")
