@@ -1,0 +1,13 @@
+
+#map {
+    z-index: 0;
+    /* Set z-index to 0 as it will be on a layer below the contact form */
+}
+
+#div_title {
+	top: 10px;
+}
+
+#div_scl {
+	top: 250px;
+}
