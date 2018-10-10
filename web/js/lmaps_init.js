@@ -86,29 +86,8 @@ function initMap() {
 	var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 	var osm = new L.TileLayer(osmUrl, {minZoom: minZoom, maxZoom: maxZoom, attribution: osmAttrib});
 	
-	// TODO use WMS
-//	var map = L.map(mapDiv, mapOptions);
-//	var wmsLayer = L.tileLayer.wms('https://demo.boundlessgeo.com/geoserver/ows?', wmsOptions).addTo(map);
-
-	// start the map over Sweden
-//	map.setView(new L.LatLng(61, 14), zoom);
-	
 	map.setView(new L.LatLng(lat, lon), zoom);
 	map.addLayer(osm);
-	
-	var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
-
-	  var searchControl = L.esri.Geocoding.geosearch({
-	    providers: [
-	      arcgisOnline,
-	      L.esri.Geocoding.mapServiceProvider({
-	        label: 'States and Counties',
-	        url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer',
-	        layers: [2, 3],
-	        searchFields: ['NAME', 'STATE_NAME']
-	      })
-	    ]
-	  }).addTo(map);
 }
 
 function unload(){
