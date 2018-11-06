@@ -1,10 +1,10 @@
-// Google Maps variables
+//Google Maps variables
 var map;
 var radar;
 var opacity;    
 var marker;
-    
-// Radar variables
+
+//Radar variables
 var update_time = 300000;
 var update_timeout_id = null;
 var num_loaded = 0;
@@ -23,57 +23,57 @@ var quality = false;
 
 var maxZoom = 12;
 var minZoom = 1;
-// ---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
 function isCanvasSupported(){
-  var elem = document.createElement('canvas');
-  return !!(elem.getContext && elem.getContext('2d'));
+	var elem = document.createElement('canvas');
+	return !!(elem.getContext && elem.getContext('2d'));
 }
 
 function initialize() {
-    if (!isCanvasSupported()) {
-        alert("This website uses HTML5 canvases. You are running a browser that does not support them. Please use a recent version of Firefox, Chrome, Opera, Safari, or a W3C-compliant version of Explorer.");
-	window.location = "http://www.baltrad.eu/"
-        return false;
-    }	
-    
-    viewportwidth = window.innerWidth;
-    if (!viewportwidth)
-        viewportwidth = document.body.clientWidth;
-    viewportheight = window.innerHeight;
-    
-    initMap();
+	if (!isCanvasSupported()) {
+		alert("This website uses HTML5 canvases. You are running a browser that does not support them. Please use a recent version of Firefox, Chrome, Opera, Safari, or a W3C-compliant version of Explorer.");
+		window.location = "http://www.baltrad.eu/"
+			return false;
+	}	
 
-    // Add name and copyright info into title box   
-    document.getElementById('span_title_name').innerHTML=title_string_name;
-    document.getElementById('div_title_copy').innerHTML=title_string_copyright;
-    
-    // Set opacity 
-    document.getElementById('opacity').options[parseInt(opa)].selected=true;
-    change_opacity();
+	viewportwidth = window.innerWidth;
+	if (!viewportwidth)
+		viewportwidth = document.body.clientWidth;
+	viewportheight = window.innerHeight;
 
-    // Set animation speed
-    document.getElementById('rep_time').options[parseInt(rep)].selected=true;
-    change_rep_time();
-    
-    // Set additional time on the end of animation
-    document.getElementById('add_time').options[parseInt(add)].selected=true;
-    change_add_time();
+	initMap();
 
-    // Set update time of radar image list
-    document.getElementById('update_time').options[parseInt(update)].selected=true;
-    change_update_time();
-  
-    // Load radar image list
-    update_radar_image_list();
-	
-    change_center_boundary();
+	// Add name and copyright info into title box   
+	document.getElementById('span_title_name').innerHTML=title_string_name;
+	document.getElementById('div_title_copy').innerHTML=title_string_copyright;
 
-    toggle_quality();
-    // Hide "loading" DIV and show loaded content
-    setTimeout("document.getElementById('loading').style.display = 'none'; document.getElementById('loaded').style.visibility = 'visible';", 1000);
+	// Set opacity 
+	document.getElementById('opacity').options[parseInt(opa)].selected=true;
+	change_opacity();
 
-    // Search bar
-    var element = document.getElementById('search_location');
+	// Set animation speed
+	document.getElementById('rep_time').options[parseInt(rep)].selected=true;
+	change_rep_time();
+
+	// Set additional time on the end of animation
+	document.getElementById('add_time').options[parseInt(add)].selected=true;
+	change_add_time();
+
+	// Set update time of radar image list
+	document.getElementById('update_time').options[parseInt(update)].selected=true;
+	change_update_time();
+
+	// Load radar image list
+	update_radar_image_list();
+
+	change_center_boundary();
+
+	toggle_quality();
+	// Hide "loading" DIV and show loaded content
+	setTimeout("document.getElementById('loading').style.display = 'none'; document.getElementById('loaded').style.visibility = 'visible';", 1000);
+
+	// Search bar
+	var element = document.getElementById('search_location');
 
 }
 
@@ -89,16 +89,31 @@ function initMap() {
 	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 	var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 	var osm = new L.TileLayer(osmUrl, {minZoom: minZoom, maxZoom: maxZoom, attribution: osmAttrib});
-	
+
 	map.setView(new L.LatLng(lat, lon), zoom);
 	map.addLayer(osm);
+
+	map.on('fullscreenchange', function () {
+		var controls = document.getElementById('div_controls');
+		var title = document.getElementById('div_title');
+		var scl = document.getElementById('div_scl');
+		if (map.isFullscreen()) {
+			controls.hidden = true;
+			title.hidden = true;
+			scl.hidden = true;
+		} else {
+			controls.hidden = false;
+			title.hidden = false;
+			scl.hidden = false;
+		}
+	});
 }
 
 function unload(){
-    try{
-    	map.removeLayer(radar);
-    	radar = null;
-    }catch(e){
-    }
+	try{
+		map.removeLayer(radar);
+		radar = null;
+	}catch(e){
+	}
 }
-    
+
