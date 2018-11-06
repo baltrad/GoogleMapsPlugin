@@ -79,7 +79,11 @@ function initialize() {
 
 function initMap() {
 	// set up the map
-	map = new L.Map('map');
+	map = L.map('map', {
+		center: [61, 17],
+		zoom: 5,
+		fullscreenControl: true
+	});
 
 	// create the tile layer with correct attribution
 	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
