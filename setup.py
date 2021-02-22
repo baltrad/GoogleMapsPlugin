@@ -74,6 +74,7 @@ if __name__ == "__main__":
                     (ipath+'/web/img', glob.glob('web/img/*.ico')),
                     (ipath+'/web/js', glob.glob('web/js/*.js')),
                     (ipath+'/web', glob.glob('web/*.php')),
+                    (ipath+'/web', glob.glob('web/*.html')),
                     (ipath+'/web', glob.glob('web/*.xml')),
                     (ipath+'/Lib', glob.glob('src/*.TTF')),
                     (ipath+'/Lib', glob.glob('src/*.xml')),
