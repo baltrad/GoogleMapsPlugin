@@ -49,7 +49,7 @@
   while ($ImgFile = readdir($ImgDir)){
     if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="legend.png" && $ImgFile!="index.php") {
       $parts=explode(".",$ImgFile);
-      $min=substr($parts[0],count($parts[0])-1,1);
+      $min=substr($parts[0],strlen($parts[0])-1,1);
       $ImgArr[count($ImgArr)] = $ImgFile;
     }
   }
@@ -59,7 +59,7 @@
   while ($ImgFile = readdir($ImgDir)){
     if ($ImgFile!="." && $ImgFile!=".." && $ImgFile!="legend.png" && $ImgFile!="index.php") {
       $parts=explode(".",$ImgFile);
-      $min=substr($parts[0],count($parts[0])-1,1);
+      $min=substr($parts[0],strlen($parts[0])-1,1);
       $ImgArr[count($ImgArr)] = $ImgFile;
     }
   }
@@ -76,11 +76,11 @@
     $parts=explode(".",$ImgArr[$i]);
 
     $isotimestamp=$parts[0];
-    $yyyy=substr($isotimestamp,0,4);
-    $mm=substr($isotimestamp,4,2);
-    $dd=substr($isotimestamp,6,2);
-    $HH=substr($isotimestamp,8,2);
-    $MM=substr($isotimestamp,10,2);
+    $yyyy=(int)substr($isotimestamp,0,4);
+    $mm=(int)substr($isotimestamp,4,2);
+    $dd=(int)substr($isotimestamp,6,2);
+    $HH=(int)substr($isotimestamp,8,2);
+    $MM=(int)substr($isotimestamp,10,2);
     $data_dir='./data/'.$prd.'/'.$yyyy.'/'.$mm.'/'.$dd;
     date_default_timezone_set('UTC');
     $current_date = mktime($HH, $MM, 0, $mm, $dd, intval($yyyy));
