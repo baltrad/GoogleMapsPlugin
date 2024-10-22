@@ -35,9 +35,10 @@ var qualityLayer = null;
 let productInfo;
 let product_provider_baseurls;
 let odimSource;
-$(document).ready( async function(){
+$(document).ready( function(){
 	loadCookieSettings();
 	initViewer();
+	initialize();
 });
 
 function loadCookieSettings() {
@@ -97,14 +98,6 @@ function initViewer() {
     var ne = new L.latLng(nelat,nelon);
     var sw = new L.latLng(swlat,swlon);
     boundaries = new L.latLngBounds(sw, ne); 
-    
-    // Called when window loads. A bit more controlled and we don't
-    // need to rely if body.onload is called before head initialization
-    //
-    function doloadwindow() {
-      initialize();
-    }
-    window.onload=doloadwindow;
 }
 
 //create ajax http request
