@@ -76,14 +76,15 @@
     $parts=explode(".",$ImgArr[$i]);
 
     $isotimestamp=$parts[0];
-    $yyyy=(int)substr($isotimestamp,0,4);
-    $mm=(int)substr($isotimestamp,4,2);
-    $dd=(int)substr($isotimestamp,6,2);
-    $HH=(int)substr($isotimestamp,8,2);
-    $MM=(int)substr($isotimestamp,10,2);
+    $yyyy=substr($isotimestamp,0,4);
+    $mm=substr($isotimestamp,4,2);
+    $dd=substr($isotimestamp,6,2);
+    $HH=substr($isotimestamp,8,2);
+    $MM=substr($isotimestamp,10,2);
+    
     $data_dir='./data/'.$prd.'/'.$yyyy.'/'.$mm.'/'.$dd;
     date_default_timezone_set('UTC');
-    $current_date = mktime($HH, $MM, 0, $mm, $dd, intval($yyyy));
+    $current_date = mktime((int)$HH, (int)$MM, 0, (int)$mm, (int)$dd, (int)$yyyy);
     
     if ($current_date < $start_date || $current_date > $end_date)
       continue;
